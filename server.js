@@ -2,8 +2,7 @@
  * Module dependencies.
  */
 var express = require('express');
-//var fs = require('fs');
-var app = express(); // TODO: happy.js is a better express.js
+var app = express();
 
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -24,9 +23,9 @@ app.use(express.static(__dirname + '/'));
  * Routes
  */
 
-app.get('/controllers/:controllerName', function(req, res) {
-   res.sendfile('./controllers/' + req.params.controllerName);
-});
+//app.get('/controllers/:controllerName', function(req, res) {
+//   res.sendfile('./controllers/' + req.params.controllerName);
+//});
 app.get('/partials/:partialPath', function(req, res) {
    res.sendfile('./partials/' + req.params.partialPath + '.html');
 });

@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/Proridium/web/issues"
   },
-  "homepage": "https://github.com/Proridium/web"
+  "homepage": "https://github.com/Proridium/web",
+  "devDependencies": {
+    "webpack": "^1.1.0-beta4",
+    "gulp": "^3.5.5",
+    "webpack-dev-server": "^1.2.4",
+    "gulp-util": "^2.2.14",
+    "gulp-ng-html2js": "^0.1.6",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^0.2.1",
+    "gulp-concat": "^2.2.0"
+  }
 }

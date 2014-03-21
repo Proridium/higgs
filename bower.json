@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "homepage": "https://github.com/Proridium/web",
   "authors": [
-    "Steve Hartzog <steve.hartzog@mpsbroadband.com>"
+    "Steve Hartzog <shartzog@gmail.com>"
   ],
   "license": "MIT",
   "private": true,
@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "angular": "~1.2.14",
-    "angular-route": "~1.2.14"
+    "angular-route": "~1.2.14",
+    "bootstrap": "~3.1.1"
   }
 }
