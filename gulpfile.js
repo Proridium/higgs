@@ -5,24 +5,41 @@
  *********************************************************************************/
 var gulp = require('gulp');
 var gulpUtil = require('gulp-util');
-var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var ngHtml2Js = require('gulp-ng-html2js');
 var webpack = require('webpack');
-var webpackDevServer = require('webpack-dev-server');
+var Server = require('webpack-dev-server');
 var webpackConfig = require('./webpack.config.js');
 
-// The development server (the recommended option for development)
-gulp.task('default', ['copy', 'buildTemplates', 'build-dev', 'webpack-dev-server'], function() {});
+/********************************
+ * Main Tasks                   *
+ ********************************/
+gulp.task('default', ['build-dev'], function() {});
+gulp.task('build', ['sub:copy', 'webpack:build'], function () {});
+gulp.task('build-dev', ['sub:copy-dev', 'sub:build-templates', 'webpack:build-dev', 'sub:filewatcher', 'webpack-dev-server'], function () {});
 
-gulp.task('copy', function() {
-   gulp.src('./lib/angular/angular.js').pipe(gulp.dest('./dist/lib'));
-   gulp.src('./lib/angular-route/angular-route.js').pipe(gulp.dest('./dist/lib'));
+/********************************
+ * Subtasks                     *
+ ********************************/
+gulp.task('sub:copy', function() {
+   gulp.src('./bower_components/angular/angular.min.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/angular-route/angular-route.min.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/bootstrap/js/collapse.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/jquery/dist/jquery.min.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./css/app.css').pipe(gulp.dest('./dist/css'));
+   gulp.src('./index.html').pipe(gulp.dest('./dist'));
+   gulp.src('./server.js').pipe(gulp.dest('./dist'));
+});
+gulp.task('sub:copy-dev', function() {
+   gulp.src('./bower_components/angular/angular.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/angular-route/angular-route.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/bootstrap/js/collapse.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/jquery/dist/jquery.min.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./css/app.css').pipe(gulp.dest('./dist/css'));
    gulp.src('./index.html').pipe(gulp.dest('./dist'));
 });
-
-gulp.task('buildTemplates', function() {
+gulp.task('sub:build-templates', function() {
    gulp.src('./partials/*.tpl.html')
       .pipe(ngHtml2Js({
          moduleName: 'MyAwesomePartials',
@@ -34,22 +51,19 @@ gulp.task('buildTemplates', function() {
 //      .pipe(rename('templates.js'))
       .pipe(gulp.dest('./dist/partials/'));
 });
-
-// Build and watch cycle (another option for development)
-// Advantage: No server required, can run app from filesystem
-// Disadvantage: Requests are not blocked until bundle is available,
-//               can serve an old app on refresh
-gulp.task('build-dev', ['webpack:build-dev'], function () {
+gulp.task('sub:filewatcher', function() {
    gulp.watch(['controllers/*'], function (event) {
       gulp.run('webpack:build-dev');
    });
    gulp.watch(['partials/*', 'index.html'], function (event) {
-      gulp.run('copy');
+      gulp.run('sub:build-templates');
+      gulp.src('./index.html').pipe(gulp.dest('./dist'));
    });
 });
 
-// Production build
-gulp.task('build', ['copy', 'webpack:build'], function () {});
+/********************************
+ * Webpack & Webpack Dev Server *
+ ********************************/
 gulp.task('webpack:build', function (callback) {
    var config = Object.create(webpackConfig);
 //   config.plugins = config.plugins.concat(
@@ -61,46 +75,47 @@ gulp.task('webpack:build', function (callback) {
 //      new webpack.optimize.DedupePlugin(),
 //      new webpack.optimize.UglifyJsPlugin()
 //   );
-
-   gulp.src('./server.js').pipe(gulp.dest('./dist'));
-
    webpack(config, function (err, stats) {
       if (err) { throw new gulpUtil.PluginError('webpack:build', err); }
       gulpUtil.log('[webpack:build]', stats.toString({ colors: true }));
       callback();
    });
 });
+gulp.task('webpack:build-dev', ['sub:copy-dev'], function (callback) {
+   // modify some webpack config options
+   var devConfig = Object.create(webpackConfig);
+   devConfig.devtool = 'sourcemap';
+   devConfig.debug = true;
 
-// modify some webpack config options
-var devConfig = Object.create(webpackConfig);
-devConfig.devtool = 'sourcemap';
-devConfig.debug = true;
+   // create a single instance of the compiler to allow caching
+   var devCompiler = webpack(devConfig);
 
-// create a single instance of the compiler to allow caching
-var devCompiler = webpack(devConfig);
-
-gulp.task('webpack:build-dev', ['copy'], function (callback) {
    devCompiler.run(function(err, stats) {
       if(err) { throw new gulpUtil.PluginError('webpack:build-dev', err); }
       gulpUtil.log('[webpack:build-dev]', stats.toString({ colors: true }));
       callback();
    });
 });
-
 gulp.task("webpack-dev-server", function(callback) {
    // modify some webpack config options
    var myConfig = Object.create(webpackConfig);
    myConfig.devtool = "eval";
    myConfig.debug = true;
 
+   var options = {
+      contentBase: __dirname + "/dist"
+   }
+
+//   {
+//      contentBase: __dirname + "/dist",
+//      publicPath: "/" + myConfig.output.publicPath,
+//      stats: {
+//      colors: true
+//   }
+
    // Start a webpack-dev-server
-   new webpackDevServer(webpack(myConfig), {
-      contentBase: __dirname + "/dist",
-      publicPath: "/" + myConfig.output.publicPath,
-      stats: {
-         colors: true
-      }
-   }).listen(8080, "localhost", function(err) {
+   new Server(webpack(myConfig), options)
+      .listen(8080, "localhost", function(err) {
          if(err) { throw new gulpUtil.PluginError("webpack-dev-server", err); }
          gulpUtil.log("[webpack-dev-server]", "http://localhost:8080/index.html");
       });

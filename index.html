@@ -2,15 +2,43 @@
 <html ng-app="app">
 <head>
    <title>Proridium</title>
+   <link href="./css/app.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-   <h1>Gulp & WebPack are now working this is a change</h1>
-   <a href="/main">Main</a> | <a href="/products">Products</a> | <a href="/services">Services</a> | <a href="/partners">Partners</a> | <a href="/about">About</a>
-   <br/><br/>
-   <ng-view></ng-view>
-   <script type="application/javascript" src="./lib/angular.js"></script>
-   <script type="application/javascript" src="./lib/angular-route.js"></script>
-   <script type="application/javascript" src="common.js"></script>
-   <script type="application/javascript" src="./partials/templates.js"></script>
+<nav class="topNav" role="navigation">
+   <div class="navContainer">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navHeader">
+         <button type="button" class="navToggle" data-toggle="collapse" data-target="#siteNavbarCollapse">
+            <span class="sr-only">Toggle Navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+         </button>
+         <a class="navbarBrand" href="#">Brand</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbarCollapse" id="siteNavbarCollapse">
+         <ul class="navbarNav">
+            <li class="active"><a href="/main">Main</a></li>
+            <li><a href="/products">Products</a></li>
+            <li><a href="/services">Services</a></li>
+            <li><a href="/partners">Partners</a></li>
+            <li><a href="/about">About</a></li>
+         </ul>
+      </div>
+
+   </div>
+</nav>
+
+<ng-view></ng-view>
+
+<script type="application/javascript" src="./lib/angular.js"></script>
+<script type="application/javascript" src="./lib/angular-route.js"></script>
+<script type="application/javascript" src="./lib/jquery.min.js"></script>
+<script type="application/javascript" src="./lib/collapse.js"></script>
+<script type="application/javascript" src="common.js"></script>
+<script type="application/javascript" src="./partials/templates.js"></script>
 </body>
 </html>

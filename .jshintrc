@@ -53,8 +53,12 @@
       'XMLHttpRequest': true,
 
       // Node
-      'require': true, // CommonJS module support
+      'require': true,
       'process': true,
+
+      // CommonJS module spec
+      'module': true,
+      'exports': true,
 
       // CommonJS
       'module': true,
