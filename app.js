@@ -1,5 +1,5 @@
 "use strict";
-module.exports = angular.module("app", ["ngRoute", "MyAwesomePartials"])
+module.exports = angular.module("app", ["ngRoute", "MyAwesomePartials", "ui.bootstrap"])
    .config(['$locationProvider', '$routeProvider',
    function($locationProvider, $routeProvider) {
       $locationProvider.html5Mode(true);

@@ -41,7 +41,7 @@ gulp.task('build-dev', ['sub:copy-dev', 'sub:build-templates', 'sub:webpack-buil
          notifyLivereload(event);
       });
    });
-   gulp.watch(['controllers/*'], function (event) {
+   gulp.watch(['controllers/*', 'app.js'], function (event) {
       var aFile = event.path.split('/');
       var fileName = aFile[aFile.length-1];
       gutil.log("Change detected: " + green(fileName));
@@ -73,8 +73,11 @@ gulp.task('build-dev', ['sub:copy-dev', 'sub:build-templates', 'sub:webpack-buil
 gulp.task('sub:copy', function() {
    gulp.src('./bower_components/angular/angular.min.js').pipe(gulp.dest('./dist/lib'));
    gulp.src('./bower_components/angular-route/angular-route.min.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/angular-bootstrap/ui-bootstrap.min.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js').pipe(gulp.dest('./dist/lib'));
    gulp.src('./bower_components/bootstrap/js/collapse.js').pipe(gulp.dest('./dist/lib'));
    gulp.src('./bower_components/jquery/dist/jquery.min.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/bootstrap/dist/js/bootstrap.min.js').pipe(gulp.dest('./dist/lib'));
    gulp.src('./css/app.css').pipe(gulp.dest('./dist/css'));
    gulp.src('./index.html').pipe(gulp.dest('./dist'));
    gulp.src('./server.js').pipe(gulp.dest('./dist'));
@@ -82,8 +85,11 @@ gulp.task('sub:copy', function() {
 gulp.task('sub:copy-dev', function() {
    gulp.src('./bower_components/angular/angular.js').pipe(gulp.dest('./dist/lib'));
    gulp.src('./bower_components/angular-route/angular-route.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/angular-bootstrap/ui-bootstrap.min.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js').pipe(gulp.dest('./dist/lib'));
    gulp.src('./bower_components/bootstrap/js/collapse.js').pipe(gulp.dest('./dist/lib'));
    gulp.src('./bower_components/jquery/dist/jquery.min.js').pipe(gulp.dest('./dist/lib'));
+   gulp.src('./bower_components/bootstrap/dist/js/bootstrap.min.js').pipe(gulp.dest('./dist/lib'));
    gulp.src('./css/app.css').pipe(minifyCSS()).pipe(gulp.dest('./dist/css'));
    gulp.src('./index.html').pipe(gulp.dest('./dist'));
 });
