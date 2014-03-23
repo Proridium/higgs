@@ -55,6 +55,7 @@
       // Node
       'require': true,
       'process': true,
+      '__dirname': true,
 
       // CommonJS module spec
       'module': true,

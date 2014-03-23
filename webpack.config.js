@@ -4,7 +4,10 @@ module.exports = {
    output: {
       path: __dirname,
       filename: "/dist/common.js"
-   }
+   },
+   plugins: [
+
+   ]
 //   ,
 //   module: {
 //      loaders: [
