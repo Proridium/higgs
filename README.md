@@ -1,2 +1,4 @@
-web
-===
+Newton
+======
+
+Angular Starter Template

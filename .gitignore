@@ -13,7 +13,11 @@ results
 
 npm-debug.log
 .idea
-bower_components
-css/*.css
-dist
-node_modules
+
+src/bower_components
+src/node_modules
+src/*.css
+public
+
+
+
