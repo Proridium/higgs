@@ -16,7 +16,7 @@ var green = gutil.colors.green;
 var lr = require('tiny-lr');
 
 var EXPRESS_PORT = 4000;
-var EXPRESS_ROOT = __dirname + '/public';
+var EXPRESS_ROOT = __dirname.replace('/src', '/public');
 var LIVERELOAD_PORT = 35729;
 
 
@@ -78,7 +78,7 @@ gulp.task('sub:copy', function() {
    gulp.src('./bower_components/bootstrap/js/collapse.js').pipe(gulp.dest('../public/lib'));
    gulp.src('./bower_components/jquery/dist/jquery.min.js').pipe(gulp.dest('../public/lib'));
    gulp.src('./bower_components/bootstrap/dist/js/bootstrap.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./css/site.css').pipe(gulp.dest('../public'));
+   gulp.src('./site.css').pipe(gulp.dest('../public'));
    gulp.src('./index.html').pipe(gulp.dest('../public'));
    gulp.src('./server.js').pipe(gulp.dest('../public'));
 });
@@ -155,7 +155,7 @@ function startExpress() {
    app.use(require('connect-livereload')());
    app.use(express.static(EXPRESS_ROOT));
    app.get('*', function(req, res) {
-      res.sendfile('../public/index.html'); //, { env: env });
+      res.sendfile('index.html'); //, { env: env });
    });
    app.listen(EXPRESS_PORT);
 }
