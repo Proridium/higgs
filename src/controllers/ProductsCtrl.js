@@ -1,6 +1,5 @@
-"use strict";
-var app = require("../app.js");
-module.exports = app.controller("ProductsCtrl", ["$scope", function($scope) {
-   console.log('ProductCtrl is running.');
-   $scope.message = "Hello from ProductCtrl";
-}]);
+ angular.module('app.controllers').controller('ProductsCtrl', function($scope) {
+   'use strict';
+   console.log('ProductsCtrl is running.');
+   $scope.message = 'Hello from ProductsCtrl';
+});

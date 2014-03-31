@@ -1,16 +1,19 @@
 'use strict';
-
-/*********************************************************************************
- *  https://github.com/webpack/webpack-with-common-libs/blob/master/gulpfile.js  *
- *********************************************************************************/
+//http://www.jamescrowley.co.uk/category/coding/javascript/
+var fs = require('fs');
+var path = require('path');
 var gulp = require('gulp');
+var bump = require('gulp-bump');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var minifyCSS = require('gulp-minify-css');
 var ngHtml2Js = require('gulp-ng-html2js');
-var webpackConfig = require('./webpack.config.js');
-var webpack = require('webpack');
+var ngMin = require('gulp-ngmin');
+var size = require('gulp-size');
+var insert = require('gulp-insert');
+var browserify = require('gulp-browserify');
+var clean = require('gulp-clean');
 
 var green = gutil.colors.green;
 var lr = require('tiny-lr');
@@ -19,18 +22,38 @@ var EXPRESS_PORT = 4000;
 var EXPRESS_ROOT = __dirname.replace('/src', '/public');
 var LIVERELOAD_PORT = 35729;
 
+function getFiles(dir) {
+   var files = [];
+   fs.readdirSync(dir)
+      .filter(function (file) {
+         if (!fs.statSync(path.join(dir, file)).isDirectory()
+            && file.substring(0,1) !== '_') {
+            files.push(dir + '/' + file);
+         }
+      });
+   return files;
+}
+// shim string.contains()
+if ( !String.prototype.contains ) {
+   String.prototype.contains = function() {
+      return String.prototype.indexOf.apply( this, arguments ) !== -1;
+   };
+}
 
 /********************************
  * Main Tasks                   *
  ********************************/
-gulp.task('default', ['build-dev'], function() {
+gulp.task('default', ['sub:clean-public'], function() {
    // fix initial change not updating bug
-   gulp.start('sub:copy-dev', 'sub:build-templates', 'sub:webpack-build-dev');
+   gulp.start('build-dev');
 });
-gulp.task('build', ['sub:copy', 'sub:build-templates', 'sub:webpack-build'], function () {});
-gulp.task('build-dev', ['sub:copy-dev', 'sub:build-templates', 'sub:webpack-build-dev'], function() {
+gulp.task('build', ['sub:browserify'], function () {});
+gulp.task('build-dev', ['sub:browserify-dev'], function() {
    startExpress();
    startLivereload();
+
+   var controllers = getFiles('./controllers').concat(['app.js', 'config.js']);
+   var templates = getFiles('./partials').concat(['index.html'])  ;
 
    gulp.watch(['./app.css'], function(event) {
       var aFile = event.path.split('/');
@@ -41,16 +64,17 @@ gulp.task('build-dev', ['sub:copy-dev', 'sub:build-templates', 'sub:webpack-buil
          notifyLivereload(event);
       });
    });
-   gulp.watch(['controllers/*', 'app.js'], function (event) {
+   gulp.watch(controllers, function (event) {
       var aFile = event.path.split('/');
       var fileName = aFile[aFile.length-1];
       gutil.log("Change detected: " + green(fileName));
-      gulp.start('sub:webpack-build-dev', function() {
+      gulp.start('sub:browserify-dev', function() {
          event.path = EXPRESS_ROOT + '/common.js';
          notifyLivereload(event);
       });
    });
-   gulp.watch(['partials/*', 'index.html'], function (event) {
+
+   gulp.watch(templates, function (event) {
       var aFile = event.path.split('/');
       var fileName = aFile[aFile.length-1];
       gutil.log("Change detected: " + green(fileName));
@@ -70,78 +94,119 @@ gulp.task('build-dev', ['sub:copy-dev', 'sub:build-templates', 'sub:webpack-buil
 /********************************
  * Subtasks                     *
  ********************************/
-gulp.task('sub:copy', function() {
-   gulp.src('./bower_components/angular/angular.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/angular-route/angular-route.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/angular-bootstrap/ui-bootstrap.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/bootstrap/js/collapse.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/jquery/dist/jquery.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/bootstrap/dist/js/bootstrap.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./site.css').pipe(gulp.dest('../public'));
-   gulp.src('./index.html').pipe(gulp.dest('../public'));
-   gulp.src('./server.js').pipe(gulp.dest('../public'));
-});
-gulp.task('sub:copy-dev', function() {
-   gulp.src('./bower_components/angular/angular.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/angular-route/angular-route.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/angular-bootstrap/ui-bootstrap.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/bootstrap/js/collapse.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/jquery/dist/jquery.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./bower_components/bootstrap/dist/js/bootstrap.min.js').pipe(gulp.dest('../public/lib'));
-   gulp.src('./site.css').pipe(minifyCSS()).pipe(gulp.dest('../public'));
-   gulp.src('./index.html').pipe(gulp.dest('../public'));
-});
+var bowerComponents = [
+   './bower_components/angular/angular.min.js',
+   './bower_components/angular-route/angular-route.min.js',
+   './bower_components/angular-bootstrap/ui-bootstrap.min.js',
+   './bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
+//   './bower_components/bootstrap/js/collapse.js',
+//   './bower_components/jquery/dist/jquery.min.js',
+//   './bower_components/bootstrap/dist/js/bootstrap.min.js'
+];
+var partials = getFiles('./partials');
 gulp.task('sub:build-templates', function() {
-   gulp.src('./partials/*.tpl.html')
+   gulp.src(partials)
       .pipe(ngHtml2Js({
-         moduleName: 'MyAwesomePartials',
+         moduleName: 'app.templates',
          prefix: './partials/',
          rename: function(url) { return url.replace('.tpl.html', '.html'); }
       }))
-      .pipe(concat('templates.js'))
+      .pipe(concat('_templates.js'))
       .pipe(uglify())
-//      .pipe(rename('templates.js'))
-      .pipe(gulp.dest('../public/'));
+      .pipe(gutil.log('[build-templates]', size()))
+      .pipe(gulp.dest('./partials'))
+      .pipe(size({title: '[build-templates]'}));
+});
+gulp.task('sub:build-templates-dev', function() {
+   gulp.src(partials)
+      .pipe(ngHtml2Js({
+         moduleName: 'app.templates',
+         prefix: './partials/',
+         rename: function(url) { return url.replace('.tpl.html', '.html'); }
+      }))
+      .pipe(concat('_templates.js'))
+      .pipe(gulp.dest(__dirname + '/partials'))
+      .pipe(size({title: '[build-templates]'}));
+});
+gulp.task('sub:bump-minor', function() {
+   gulp.src(['./package.json', './bower.json'])
+      .pipe(bump({type: 'minor'})).on('error', gutil.log)
+      .pipe(gulp.dest('./'));
+});
+gulp.task('sub:bump-patch', function(cb) {
+   gulp.src(['./package.json', './bower.json'])
+      .pipe(bump({type: 'patch'}))
+      .pipe(gulp.dest('./'));
+   cb();
+});
+gulp.task('sub:clean-public', function(cb) {
+   if (fs.existsSync(EXPRESS_ROOT)) {
+      var filesToDelete = getFiles(EXPRESS_ROOT);
+      if (fs.existsSync(EXPRESS_ROOT + '/lib')) {
+         filesToDelete = filesToDelete.concat(getFiles(EXPRESS_ROOT + '/lib'));
+      } else {
+         fs.mkdir(EXPRESS_ROOT + '/lib');
+      }
+      if (filesToDelete.length > 0) {
+         gulp.src(filesToDelete, {read: false}).pipe(clean({ force: true }));
+      }
+   } else {
+      fs.mkdir(EXPRESS_ROOT);
+      fs.mkdir(EXPRESS_ROOT + '/lib');
+   }
+   cb();
+});
+gulp.task('sub:publish', ['sub:clean-public'], function() {
+   gulp.src(bowerComponents).pipe(gulp.dest('../public/lib'));
+   gulp.src('./site.css')
+      .pipe(minifyCSS())
+      .pipe(gulp.src('./index.html'))
+      .pipe(gulp.dest('../public'));
+});
+gulp.task('sub:publish-dev', ['sub:clean-public'], function() {
+//   gutil.log(bowerComponents);
+   gulp.src(bowerComponents).pipe(gulp.dest('../public/lib'));
+   gulp.src(['./site.css', './index.html']).pipe(gulp.dest('../public'));
+});
+gulp.task('sub:publish-express', function() {
+   gulp.src('./server.js').pipe(gulp.dest('../public'));
 });
 
 
 /********************************
- * Webpack                      *
+ * Browserify                   *
  ********************************/
-gulp.task('sub:webpack-build', function (callback) {
-   var config = Object.create(webpackConfig);
-   config.plugins = config.plugins.concat(
-//      new webpack.DefinePlugin({
-//         "process.env": {
-//            "NODE_ENV": JSON.stringify("production")
-//         }
-//      }),
-//      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin()
-   );
-   webpack(config, function (err, stats) {
-      if (err) { throw new gutil.PluginError('webpack:build', err); }
-      gutil.log('[webpack:build]', stats.toString({ colors: true }));
-      callback();
-   });
+var scripts = getFiles(__dirname + '/controllers');
+gulp.task('sub:browserify', ['sub:publish-express', 'sub:build-templates', 'sub:bump-minor'], function() {
+   gulp.src(scripts)
+      .pipe(concat('_controllers.js'))
+      .pipe(insert.prepend('angular.module(\'app.controllers\', []);\r'))
+      .pipe(ngMin())
+      .pipe(gulp.dest('./controllers'))
+      .pipe(gulp.src(['app.js'], {read: false}))
+      .pipe(uglify())
+      .pipe(browserify({
+         insertGlobals: true,
+         debug: true
+      })).on('error', gutil.log)
+      .pipe(concat('bundle.js'))
+      .pipe(gulp.dest(EXPRESS_ROOT))
+      .pipe(size({title: '[browserify]'}));
 });
-
-// modify some webpack config options
-var devConfig = Object.create(webpackConfig);
-devConfig.devtool = 'sourcemap';
-devConfig.debug = true;
-//devConfig.plugins = devConfig.plugins.concat(new webpack.optimize.UglifyJsPlugin());
-
-// create a single instance of the compiler to allow caching
-var devCompiler = webpack(devConfig);
-gulp.task('sub:webpack-build-dev', function (callback) {
-   return devCompiler.run(function(err, stats) {
-      if(err) { throw new gutil.PluginError('webpack:build-dev', err); }
-//      gutil.log('[webpack:build-dev]', stats.toString({ colors: true }));
-      callback();
-   });
+gulp.task('sub:browserify-dev', ['sub:publish-dev', 'sub:build-templates-dev', 'sub:bump-patch'], function() {
+   gulp.src(scripts)
+      .pipe(concat('_controllers.js'))
+      .pipe(insert.prepend('angular.module(\'app.controllers\', []);\r'))
+      .pipe(gulp.dest('./controllers'))
+      .pipe(gulp.src(['app.js'], {read: false}))
+      .pipe(browserify({
+         insertGlobals: true,
+         debug: true
+      }))
+      .on('error', gutil.log)
+      .pipe(concat('bundle.js'))
+      .pipe(gulp.dest(EXPRESS_ROOT))
+      .pipe(size({title: '[browserify]'}));
 });
 
 

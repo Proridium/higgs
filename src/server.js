@@ -17,7 +17,7 @@ function serverTime (req, res){
 /**
  * Configure Express
  */
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname.replace('/src', '/public/')));
 
 /**
  * Routes

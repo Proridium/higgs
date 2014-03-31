@@ -17,7 +17,7 @@
    "noempty"      : true,     // true: Prohibit use of empty blocks
    "undef"        : true,     // true: Require all non-global variables to be declared (prevents global leaks)
    "unused"       : true,     // true: Require all defined variables be used
-   "strict"       : true,     // true: Requires all functions run in ES5 Strict Mode
+   "strict"       : false,     // true: Requires all functions run in ES5 Strict Mode
    "trailing"     : true,     // true: Prohibit trailing whitespaces
 
    // Relaxing

@@ -1,6 +1,5 @@
-"use strict";
-var app = require("../app.js");
-module.exports = app.controller("MainCtrl", ["$scope", function($scope) {
+angular.module('app.controllers').controller('MainCtrl', function ($scope) {
+   'use strict';
    console.log('MainCtrl is running.');
-   $scope.message = "Hello from MainCtrl";
-}]);
+   $scope.message = "beep";
+});
