@@ -1,5 +1,5 @@
 'use strict';
-//http://www.jamescrowley.co.uk/category/coding/javascript/
+
 var fs = require('fs');
 var path = require('path');
 var gulp = require('gulp');
@@ -14,6 +14,7 @@ var size = require('gulp-size');
 var insert = require('gulp-insert');
 var browserify = require('gulp-browserify');
 var clean = require('gulp-clean');
+var less = require('gulp-less');
 
 var green = gutil.colors.green;
 var lr = require('tiny-lr');
@@ -55,11 +56,11 @@ gulp.task('build-dev', ['sub:browserify-dev'], function() {
    var controllers = getFiles('./controllers').concat(['app.js', 'config.js']);
    var templates = getFiles('./partials').concat(['index.html'])  ;
 
-   gulp.watch(['./app.css'], function(event) {
+   gulp.watch(['./site.css'], function(event) {
       var aFile = event.path.split('/');
       var fileName = aFile[aFile.length-1];
       gutil.log("Change detected: " + green(fileName));
-      gulp.start('sub:copy-dev', function() {
+      gulp.start('sub:publish-dev', function() {
          event.path = EXPRESS_ROOT + '/app.css';
          notifyLivereload(event);
       });
@@ -79,7 +80,7 @@ gulp.task('build-dev', ['sub:browserify-dev'], function() {
       var fileName = aFile[aFile.length-1];
       gutil.log("Change detected: " + green(fileName));
       gulp.start('sub:build-templates', function () {
-         gulp.src('./index.html').pipe(gulp.dest('../public'));
+         gulp.src('./index.html').pipe(gulp.dest(EXPRESS_ROOT));
          if (fileName === 'index.html') {
             event.path = EXPRESS_ROOT + '/index.html';
          } else {
@@ -96,12 +97,12 @@ gulp.task('build-dev', ['sub:browserify-dev'], function() {
  ********************************/
 var bowerComponents = [
    './bower_components/angular/angular.min.js',
-   './bower_components/angular-route/angular-route.min.js',
+   './bower_components/angular-animate/angular-animate.min.js',
    './bower_components/angular-bootstrap/ui-bootstrap.min.js',
-   './bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
-//   './bower_components/bootstrap/js/collapse.js',
-//   './bower_components/jquery/dist/jquery.min.js',
-//   './bower_components/bootstrap/dist/js/bootstrap.min.js'
+   './bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+   './bower_components/angular-ui-router/release/angular-ui-router.min.js',
+   './bower_components/angular-strap/dist/angular-strap.tpl.min.js',
+   './bower_components/angular-strap/dist/modules/navbar.min.js'
 ];
 var partials = getFiles('./partials');
 gulp.task('sub:build-templates', function() {
@@ -156,20 +157,31 @@ gulp.task('sub:clean-public', function(cb) {
    }
    cb();
 });
+//gulp.task('sub:ensureStyle', function () {
+//   var siteCss = __dirname + '/styles/site.css';
+//   if (!fs.existsSync(siteCss)) {
+////      gutil.log('site.css missing!');
+//      gulp.src(__dirname + '/styles/site.less')
+//         .pipe(less())
+//         .pipe(gulp.dest(__dirname + '/styles'));
+////   } else {
+////      gutil.log('site.css exists. :)');
+//   }
+//});
 gulp.task('sub:publish', ['sub:clean-public'], function() {
-   gulp.src(bowerComponents).pipe(gulp.dest('../public/lib'));
-   gulp.src('./site.css')
+   gulp.src(bowerComponents).pipe(gulp.dest(EXPRESS_ROOT + '/lib'));
+   gulp.src('./styles/site.css')
       .pipe(minifyCSS())
       .pipe(gulp.src('./index.html'))
-      .pipe(gulp.dest('../public'));
+      .pipe(gulp.dest(EXPRESS_ROOT));
 });
 gulp.task('sub:publish-dev', ['sub:clean-public'], function() {
 //   gutil.log(bowerComponents);
-   gulp.src(bowerComponents).pipe(gulp.dest('../public/lib'));
-   gulp.src(['./site.css', './index.html']).pipe(gulp.dest('../public'));
+   gulp.src(bowerComponents).pipe(gulp.dest(EXPRESS_ROOT + '/lib'));
+   gulp.src(['./styles/site.css', './index.html']).pipe(gulp.dest(EXPRESS_ROOT));
 });
 gulp.task('sub:publish-express', function() {
-   gulp.src('./server.js').pipe(gulp.dest('../public'));
+   gulp.src('./server.js').pipe(gulp.dest(EXPRESS_ROOT));
 });
 
 

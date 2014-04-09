@@ -18,7 +18,7 @@ src/controllers/_controllers.js
 src/partials/_templates.js
 src/bower_components
 src/node_modules
-src/*.css
+src/styles/*.css
 public
 
 
