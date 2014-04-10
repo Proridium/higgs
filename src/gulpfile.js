@@ -20,7 +20,12 @@ var green = gutil.colors.green;
 var lr = require('tiny-lr');
 
 var EXPRESS_PORT = 4000;
-var EXPRESS_ROOT = __dirname.replace('/src', '/public');
+var EXPRESS_ROOT = '';
+if (process.platform === 'win32' || process.platform === 'win64') {
+   EXPRESS_ROOT = __dirname.replace('\src', '\public');
+} else {
+   EXPRESS_ROOT = __dirname.replace('/src', '/public');
+}
 var LIVERELOAD_PORT = 35729;
 
 function getFiles(dir) {
