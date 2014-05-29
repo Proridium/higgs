@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 var express = require('express');
+var path = require('path');
 var app = express();
 
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -17,7 +18,7 @@ function serverTime (req, res){
 /**
  * Configure Express
  */
-app.use(express.static(__dirname.replace('/src', '/public/')));
+app.use(express.static(path.join(__dirname.substr(0,__dirname.length-3), '/public')));
 
 /**
  * Routes
