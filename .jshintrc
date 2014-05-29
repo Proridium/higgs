@@ -38,6 +38,11 @@
    "passfail"      : false,    // true: Stop on first error
    "white"         : false,    // true: Check against strict whitespace and indentation rules
 
+   // Environments
+   "browser"       : true,
+   "jquery"        : true,
+   "node"          : true,
+
    // Custom Globals
    "globals"       : {  // Vanilla JavaScript
       'alert': true,
@@ -67,16 +72,8 @@
 
       // Libraries
       '$': true, 'jQuery': true,
-      'CryptoJS': true,
-      'grunt': true,
       'LazyLoad': true,
       'moment': true,
-      'PluginDetect': true,
-
-      // Dash
-      'MetricsTreeConverter': true,
-      'Dash': true,
-      'MediaPlayer': true,
 
       // Angular
       '$timeout': true,

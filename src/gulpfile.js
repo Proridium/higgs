@@ -20,12 +20,12 @@ var green = gutil.colors.green;
 var lr = require('tiny-lr');
 
 var EXPRESS_PORT = 4000;
-var EXPRESS_ROOT = '';
-if (process.platform === 'win32' || process.platform === 'win64') {
-   EXPRESS_ROOT = __dirname.replace('\src', '\public');
-} else {
-   EXPRESS_ROOT = __dirname.replace('/src', '/public');
-}
+var EXPRESS_ROOT = path.join(__dirname, '../public');
+//if (/^win/.test(process.platform)) {
+//   EXPRESS_ROOT = __dirname.replace('\src', '\public');
+//} else {
+//   EXPRESS_ROOT = __dirname.replace('/src', '/public');
+//}
 var LIVERELOAD_PORT = 35729;
 
 function getFiles(dir) {
@@ -34,7 +34,7 @@ function getFiles(dir) {
       .filter(function (file) {
          if (!fs.statSync(path.join(dir, file)).isDirectory()
             && file.substring(0,1) !== '_') {
-            files.push(dir + '/' + file);
+            files.push(path.join(dir,file));
          }
       });
    return files;
