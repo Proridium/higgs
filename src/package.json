@@ -1,5 +1,6 @@
 {
   "name": "web",
+  "subdomain": "proridium",
   "version": "0.1.76",
   "description": "web",
   "main": "./config.js",
