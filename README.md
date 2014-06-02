@@ -1,6 +1,8 @@
 Flux
 ======
 
+[![Nodejitsu Deploy Status Badges](https://webhooks.nodejitsu.com/SteveHartzog/web.png)](https://webops.nodejitsu.com#SteveHartzog/web)
+
 Angular Starter Template
 
 Checklist:
