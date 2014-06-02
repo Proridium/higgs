@@ -1,0 +1,45 @@
+{
+  "name": "web",
+  "subdomain": "proridium",
+   "scripts": {
+      "start": "/src/server.js"
+   },
+  "version": "0.1.76",
+  "description": "web",
+  "main": "./config.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Proridium/web.git"
+  },
+  "author": "Steve Hartzog <shartzog@gmail.com>",
+  "license": "CC-BY-NC-ND-3.0",
+  "bugs": {
+    "url": "https://github.com/Proridium/web/issues"
+  },
+  "scripts": {
+    "start": "node init.js"
+  },
+  "homepage": "https://github.com/Proridium/web",
+  "dependencies": {
+    "express": "^3.5.1"
+  },
+  "devDependencies": {
+    "browserify": "^3.38.0",
+    "connect-livereload": "^0.3.2",
+    "gulp": "^3.6.0",
+    "gulp-util": "^2.2.14",
+    "gulp-ng-html2js": "^0.1.6",
+    "gulp-uglify": "^0.2.1",
+    "gulp-concat": "^2.2.0",
+    "gulp-minify-css": "^0.3.0",
+    "gulp-ngmin": "^0.1.2",
+    "gulp-clean": "^0.2.4",
+    "gulp-browserify": "^0.5.0",
+    "gulp-insert": "^0.2.0",
+    "gulp-size": "^0.2.0",
+    "gulp-bump": "^0.1.7",
+    "gulp-less": "^1.2.3",
+    "gulp-livereload": "^1.2.0",
+    "tiny-lr": "0.0.5"
+  }
+}
