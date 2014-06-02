@@ -1,6 +1,9 @@
 {
   "name": "web",
   "subdomain": "proridium",
+   "scripts": {
+      "start": "/src/server.js"
+   },
   "version": "0.1.76",
   "description": "web",
   "main": "./config.js",
