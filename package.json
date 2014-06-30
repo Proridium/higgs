@@ -2,7 +2,7 @@
   "name": "web",
   "subdomain": "proridium",
   "scripts": {
-    "postdeploy": "gulp build",
+    "predeploy": "gulp",
     "start": "node src/server.js"
   },
   "version": "0.2.18",
