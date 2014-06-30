@@ -1,13 +1,13 @@
 Flux
 ======
 
-[![Nodejitsu Deploy Status Badges](https://webhooks.nodejitsu.com/proridium/web.png)](https://webops.nodejitsu.com#proridium/web)
+[![Nodejitsu Deploy Status Badges](https://webhooks.nodejitsu.com/proridium/web.png)](https://webops.nodejitsu.com#proridium/webhooks)
 
 Angular Starter Template
 
 Checklist:
-1) Install Node and WebStorm
-2) Terminal:
+- Install Node and WebStorm
+- Terminal:
    cd \src
    npm start
 
