@@ -1,7 +1,7 @@
 Flux
 ======
 
-[![Nodejitsu Deploy Status Badges](https://webhooks.nodejitsu.com/proridium/web.png)](https://webops.nodejitsu.com#proridium/webhooks)
+[![Proridium Deploy Status Badges](https://webhooks.nodejitsu.com/proridium/web.png)](https://webops.nodejitsu.com#proridium/webhooks)
 
 Angular Starter Template
 
