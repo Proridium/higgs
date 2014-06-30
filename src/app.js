@@ -1,8 +1,9 @@
 'use strict';
 require('./controllers/_controllers');
+require('./services/_services');
 require('./partials/_templates');
 
-module.exports = angular.module('app', ['ngAnimate', 'app.controllers', 'app.templates', 'ui.bootstrap', 'ui.router', 'mgcrea.ngStrap.navbar'])
+module.exports = angular.module('app', ['ngAnimate', 'app.controllers', 'app.services', 'app.templates', 'ui.bootstrap', 'ui.router', 'mgcrea.ngStrap.navbar'])
    .config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
       $locationProvider.html5Mode(true);
       $stateProvider

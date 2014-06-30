@@ -14,12 +14,11 @@ results
 npm-debug.log
 .idea
 
-src/controllers/_controllers.js
-src/partials/_templates.js
-src/bower_components
-src/node_modules
-src/styles/*.css
+node_modules
 public
 
-
-
+src/controllers/_controllers.js
+src/services/_services.js
+src/partials/_templates.js
+src/bower_components
+src/styles/*.css

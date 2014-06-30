@@ -78,7 +78,7 @@ function installLess(cb) {
 
 function installBowerModules() {
    log.subHeader('2) Installing bower modules...');
-   exec('bower install', function (error, stdout, stderr) {
+   exec('cd src && bower install && cd ..', function (error, stdout, stderr) {
       if (stderr.length > 0) {
          log.red('bower error: \n');
          log.body(stderr + '\n');
@@ -92,10 +92,10 @@ function installBowerModules() {
 
 function ensureStyle(cb) {
    log.subHeader2('1b) Ensuring styles...');
-   var siteCss = __dirname + '/styles/site.css';
+   var siteCss = path.join(__dirname, '/src/styles/site.css');
    if (!fs.existsSync(siteCss)) {
       log.body2('... site.css missing!');
-      exec('lessc -x ./styles/site.less > ./styles/site.css', function (error, stdout, stderr) {
+      exec('lessc -x ./src/styles/site.less > ./src/styles/site.css', function (error, stdout, stderr) {
          if (stderr.length > 0) {
             log.red('LESS compilation error: \n');
             log.body2(stderr + '\n');
