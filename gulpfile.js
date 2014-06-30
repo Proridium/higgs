@@ -3,6 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var gulp = require('gulp');
+var debug = require('gulp-debug');
 var bump = require('gulp-bump');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
@@ -15,25 +16,25 @@ var insert = require('gulp-insert');
 var browserify = require('gulp-browserify');
 var clean = require('gulp-clean');
 var less = require('gulp-less');
+var traceur = require('gulp-traceur');
 
 var green = gutil.colors.green;
 var lr = require('tiny-lr');
 
 var EXPRESS_PORT = 4000;
-var EXPRESS_ROOT = path.join(__dirname, '../public');
-//if (/^win/.test(process.platform)) {
-//   EXPRESS_ROOT = __dirname.replace('\src', '\public');
-//} else {
-//   EXPRESS_ROOT = __dirname.replace('/src', '/public');
-//}
+var EXPRESS_ROOT = path.join(__dirname, './public');
 var LIVERELOAD_PORT = 35729;
 
+console.log(EXPRESS_ROOT);
+
 function getFiles(dir) {
+//   var fullpath = path.join(__dirname, dir);
+//   console.log("getFiles() for: " + fullpath);
    var files = [];
    fs.readdirSync(dir)
       .filter(function (file) {
          if (!fs.statSync(path.join(dir, file)).isDirectory()
-            && file.substring(0,1) !== '_') {
+            && file.substring(0,1) !== '_' && file.substring(0,1) !== '.') {
             files.push(path.join(dir,file));
          }
       });
@@ -45,6 +46,9 @@ if ( !String.prototype.contains ) {
       return String.prototype.indexOf.apply( this, arguments ) !== -1;
    };
 }
+
+var controllers = getFiles('./src/controllers');
+var services = getFiles('./src/services');
 
 /********************************
  * Main Tasks                   *
@@ -58,10 +62,13 @@ gulp.task('build-dev', ['sub:browserify-dev'], function() {
    startExpress();
    startLivereload();
 
-   var controllers = getFiles('./controllers').concat(['app.js', 'config.js']);
-   var templates = getFiles('./partials').concat(['index.html'])  ;
+   var angularWatch = getFiles('./src/controllers')
+      .concat(getFiles('./src/services'))
+      .concat(['./src/app.js', './src/config.js'])
+      .concat(getFiles('./src/partials'))
+      .concat(['.src/index.html']);
 
-   gulp.watch(['./site.css'], function(event) {
+   gulp.watch(['./src/styles/site.css'], function(event) {
       var aFile = event.path.split('/');
       var fileName = aFile[aFile.length-1];
       gutil.log("Change detected: " + green(fileName));
@@ -70,27 +77,14 @@ gulp.task('build-dev', ['sub:browserify-dev'], function() {
          notifyLivereload(event);
       });
    });
-   gulp.watch(controllers, function (event) {
+   gulp.watch(angularWatch, function (event) {
       var aFile = event.path.split('/');
       var fileName = aFile[aFile.length-1];
       gutil.log("Change detected: " + green(fileName));
+
+      // Rebuild bundle.js
       gulp.start('sub:browserify-dev', function() {
          event.path = EXPRESS_ROOT + '/common.js';
-         notifyLivereload(event);
-      });
-   });
-
-   gulp.watch(templates, function (event) {
-      var aFile = event.path.split('/');
-      var fileName = aFile[aFile.length-1];
-      gutil.log("Change detected: " + green(fileName));
-      gulp.start('sub:build-templates', function () {
-         gulp.src('./index.html').pipe(gulp.dest(EXPRESS_ROOT));
-         if (fileName === 'index.html') {
-            event.path = EXPRESS_ROOT + '/index.html';
-         } else {
-            event.path = EXPRESS_ROOT + '/templates.js';
-         }
          notifyLivereload(event);
       });
    });
@@ -101,16 +95,17 @@ gulp.task('build-dev', ['sub:browserify-dev'], function() {
  * Subtasks                     *
  ********************************/
 var bowerComponents = [
-   './bower_components/angular/angular.min.js',
-   './bower_components/angular-animate/angular-animate.min.js',
-   './bower_components/angular-bootstrap/ui-bootstrap.min.js',
-   './bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-   './bower_components/angular-ui-router/release/angular-ui-router.min.js',
-   './bower_components/angular-strap/dist/angular-strap.tpl.min.js',
-   './bower_components/angular-strap/dist/modules/navbar.min.js'
+   './src/bower_components/angular/angular.min.js',
+   './src/bower_components/angular-animate/angular-animate.min.js',
+   './src/bower_components/angular-bootstrap/ui-bootstrap.min.js',
+   './src/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+   './src/bower_components/angular-ui-router/release/angular-ui-router.min.js',
+   './src/bower_components/angular-strap/dist/angular-strap.tpl.min.js',
+   './src/bower_components/angular-strap/dist/modules/navbar.min.js'
 ];
-var partials = getFiles('./partials');
+var partials = getFiles('./src/partials');
 gulp.task('sub:build-templates', function() {
+   console.log("partials: " + partials);
    gulp.src(partials)
       .pipe(ngHtml2Js({
          moduleName: 'app.templates',
@@ -119,8 +114,7 @@ gulp.task('sub:build-templates', function() {
       }))
       .pipe(concat('_templates.js'))
       .pipe(uglify())
-      .pipe(gutil.log('[build-templates]', size()))
-      .pipe(gulp.dest('./partials'))
+      .pipe(gulp.dest('./src/partials'))
       .pipe(size({title: '[build-templates]'}));
 });
 gulp.task('sub:build-templates-dev', function() {
@@ -131,8 +125,8 @@ gulp.task('sub:build-templates-dev', function() {
          rename: function(url) { return url.replace('.tpl.html', '.html'); }
       }))
       .pipe(concat('_templates.js'))
-      .pipe(gulp.dest(__dirname + '/partials'))
-      .pipe(size({title: '[build-templates]'}));
+      .pipe(gulp.dest(__dirname + '/src/partials'))
+      .pipe(size({title: '[build-templates-dev]'}));
 });
 gulp.task('sub:bump-minor', function() {
    gulp.src(['./package.json', './bower.json'])
@@ -175,55 +169,81 @@ gulp.task('sub:clean-public', function(cb) {
 //});
 gulp.task('sub:publish', ['sub:clean-public'], function() {
    gulp.src(bowerComponents).pipe(gulp.dest(EXPRESS_ROOT + '/lib'));
-   gulp.src('./styles/site.css')
+   gulp.src('./src/styles/site.css')
       .pipe(minifyCSS())
-      .pipe(gulp.src('./index.html'))
+      .pipe(gulp.src('./src/index.html'))
       .pipe(gulp.dest(EXPRESS_ROOT));
 });
 gulp.task('sub:publish-dev', ['sub:clean-public'], function() {
-//   gutil.log(bowerComponents);
-   gulp.src(bowerComponents).pipe(gulp.dest(EXPRESS_ROOT + '/lib'));
-   gulp.src(['./styles/site.css', './index.html']).pipe(gulp.dest(EXPRESS_ROOT));
+   gulp.src(bowerComponents)
+      .pipe(gulp.dest(EXPRESS_ROOT + '/lib'));
+   gulp.src(['./src/styles/site.css', './src/index.html'])
+      .pipe(gulp.dest(EXPRESS_ROOT));
 });
 gulp.task('sub:publish-express', function() {
-   gulp.src('./server.js').pipe(gulp.dest(EXPRESS_ROOT));
+   gulp.src('./src/server.js').pipe(gulp.dest(EXPRESS_ROOT));
+});
+gulp.task('sub:build-controllers', function() {
+   gulp.src(controllers)
+      .pipe(concat('_controllers.js'))
+      .pipe(insert.prepend('angular.module(\'app.controllers\', []);\r'))
+      .pipe(ngMin())
+      .pipe(gulp.dest('./src/controllers'))
+      .on('error', gutil.log)
+      .pipe(size({title: '[build-controllers-dev]'}));
+});
+gulp.task('sub:build-services', function() {
+   gulp.src(services)
+      .pipe(concat('_services.js'))
+      .pipe(insert.prepend('angular.module(\'app.services\', []);\r'))
+      .pipe(ngMin())
+      .pipe(gulp.dest('./src/services'))
+      .on('error', gutil.log)
+      .pipe(size({title: '[build-services-dev]'}));
+});
+gulp.task('sub:build-controllers-dev', function() {
+   gulp.src(controllers)
+      .pipe(concat('_controllers.js'))
+      .pipe(insert.prepend('angular.module(\'app.controllers\', []);\r'))
+      .pipe(gulp.dest('./src/controllers'))
+      .on('error', gutil.log)
+      .pipe(size({title: '[build-controllers-dev]'}));
+});
+gulp.task('sub:build-services-dev', function() {
+   gulp.src(services)
+      .pipe(concat('_services.js'))
+      .pipe(insert.prepend('angular.module(\'app.services\', []);\r'))
+      .pipe(gulp.dest('./src/services'))
+      .on('error', gutil.log)
+      .pipe(size({title: '[build-services-dev]'}));
 });
 
 
 /********************************
  * Browserify                   *
  ********************************/
-var scripts = getFiles(__dirname + '/controllers');
-gulp.task('sub:browserify', ['sub:publish-express', 'sub:build-templates', 'sub:bump-minor'], function() {
-   gulp.src(scripts)
-      .pipe(concat('_controllers.js'))
-      .pipe(insert.prepend('angular.module(\'app.controllers\', []);\r'))
-      .pipe(ngMin())
-      .pipe(gulp.dest('./controllers'))
-      .pipe(gulp.src(['app.js'], {read: false}))
-      .pipe(uglify())
+gulp.task('sub:browserify', ['sub:publish-express', 'sub:build-templates', 'sub:build-controllers', 'sub:build-services'], function() { // , 'sub:bump-minor'
+   gulp.src('./src/app.js')
       .pipe(browserify({
          insertGlobals: true,
-         debug: true
-      })).on('error', gutil.log)
+         debug: false
+      }))
+      .pipe(uglify())
       .pipe(concat('bundle.js'))
       .pipe(gulp.dest(EXPRESS_ROOT))
+      .on('error', gutil.log)
       .pipe(size({title: '[browserify]'}));
 });
-gulp.task('sub:browserify-dev', ['sub:publish-dev', 'sub:build-templates-dev', 'sub:bump-patch'], function() {
-   gulp.src(scripts)
-      .pipe(concat('_controllers.js'))
-      .pipe(insert.prepend('angular.module(\'app.controllers\', []);\r'))
-      .pipe(gulp.dest('./controllers'))
-      .pipe(gulp.src(['app.js'], {read: false}))
+gulp.task('sub:browserify-dev', ['sub:publish-dev', 'sub:build-templates-dev', 'sub:build-controllers-dev', 'sub:build-services-dev'], function() { //, 'sub:bump-patch'
+   gulp.src('./src/app.js')
       .pipe(browserify({
          insertGlobals: true,
          debug: true
       }))
-      .on('error', gutil.log)
       .pipe(concat('bundle.js'))
       .pipe(gulp.dest(EXPRESS_ROOT))
-      .pipe(size({title: '[browserify]'}));
+      .on('error', gutil.log)
+      .pipe(size({title: '[browserify-dev]'}));
 });
 
 
