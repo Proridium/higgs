@@ -6,9 +6,8 @@ Flux
 Angular Starter Template
 
 Checklist:
-# Install Node and WebStorm
-# Terminal: npm start
+1. Install Node and WebStorm
+2. Terminal: npm start
 
 ** 'npm run bump' will bump the patch version up a number.
 This should install: Express, Browserify, LiveReload, Gulp, Angular, AngularStrap, AngularUI Router, etc.
-
