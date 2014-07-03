@@ -1,7 +1,7 @@
 Paradigm
 ========
 
-[![Nodejitsu Deploy Status Badges](https://webhooks.nodejitsu.com/proridium/web.png)](https://webops.nodejitsu.com#proridium/webhooks)
+[ ![Codeship Status for Proridium/web](https://www.codeship.io/projects/45f97ca0-e487-0131-f05a-5211e4dcf742/status)](https://www.codeship.io/projects/25616)
 
 Paradigm Starter Template
 
@@ -12,3 +12,5 @@ Checklist:
 
 ** 'npm run bump' will bump the patch version up a number.
 This should install: Express, Browserify, LiveReload, Gulp, Angular, AngularStrap, AngularUI Router, etc.
+
+all4you2
