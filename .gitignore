@@ -15,10 +15,11 @@ npm-debug.log
 .idea
 
 node_modules
+bower_components
 public
 
 src/controllers/_controllers.js
 src/services/_services.js
 src/partials/_templates.js
-src/bower_components
+
 src/styles/*.css

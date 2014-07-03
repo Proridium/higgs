@@ -1,0 +1,43 @@
+doctype html
+html(ng-app='app')
+    head
+        title Proridium
+        link(href="./site.css", rel="stylesheet", type="text/css")
+
+    body
+        nav(class="appNav", role="navigation", bs-navbar)
+            div(class="navHeader")
+                a(class="navbarBrand", href="#") Brand
+            ul(class="navbarNav")
+                li(data-match-route="/main")
+                    a(href="./main") Main
+                li(data-match-route="/products")
+                    a(href="./products") Products
+                li(data-match-route="/services.*")
+                    a(href="./services") Services
+                li(data-match-route="/partners")
+                    a(href="./partners") Partners
+                li(data-match-route="/about")
+                    a(href="./about") About
+
+        div(class="contentContainer")
+            section(ui-view) Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cum deleniti eius esse et fugit iusto libero obcaecati officia pariatur quaerat, quas soluta unde voluptate.
+            aside This is an aside
+
+        if (env == "development")
+            script(type="application/javascript", src="/lib/angular.js")
+            script(type="application/javascript", src="/lib/angular-animate.js")
+            script(type="application/javascript", src="/lib/ui-bootstrap-tpls.js")
+            script(type="application/javascript", src="/lib/angular-ui-router.js")
+            script(type="application/javascript", src="/lib/navbar.js")
+        else
+            // production
+            script(type="application/javascript", src="/lib/angular.min.js")
+            script(type="application/javascript", src="/lib/angular-animate.min.js")
+            script(type="application/javascript", src="/lib/ui-bootstrap-tpls.min.js")
+            script(type="application/javascript", src="/lib/angular-ui-router.min.js")
+            script(type="application/javascript", src="/lib/navbar.min.js")
+
+        script(type="application/javascript", src="./bundle.js")
+
+

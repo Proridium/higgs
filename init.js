@@ -1,46 +1,6 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
-
-var styles = {
-   // reset style: \x1B[10;22;23;24;25;27;28;29;54;55m
-   // reset default color: \x1B[39m
-   // reset all? \x1B[0m
-   reset: '\x1B[10;22;23;24;25;27;28;29;54;55m\x1B[39m',
-   underline: '\x1B[4m',
-   bold: '\x1B[1m',
-   red: '\x1B[31m',
-   green: '\033[32m',
-   grey: '\x1B[90m'
-};
-
-var log = {
-   header: function (text) {
-      console.log('\n\n' + styles.red + styles.bold + '   ' + styles.underline + text + styles.reset + '  \n');
-   },
-   subHeader: function (text) {
-      console.log('   ' + styles.bold + text + styles.reset);
-   },
-   subHeader2: function (text) {
-      console.log('      ' + styles.grey + text + styles.reset);
-   },
-   body: function (text) {
-      console.log('      ' + styles.grey + text + styles.reset);
-   },
-   body2: function (text) {
-      console.log('          ' + styles.grey + text + styles.reset);
-   },
-   red: function (text) {
-      console.log(styles.red + text + styles.reset);
-   },
-   green: function (text) {
-      console.log(styles.green + text + styles.reset);
-   },
-   grey: function (text) {
-      console.log(styles.grey + text + styles.reset);
-   }
-
-};
-
+var log = require('./utils').logging;
 log.header(' ~ Start Flux Template ~ ');
 
 installNodeModules(installBowerModules);
@@ -78,7 +38,7 @@ function installLess(cb) {
 
 function installBowerModules() {
    log.subHeader('2) Installing bower modules...');
-   exec('cd src && bower install && cd ..', function (error, stdout, stderr) {
+   exec('bower install', function (error, stdout, stderr) {
       if (stderr.length > 0) {
          log.red('bower error: \n');
          log.body(stderr + '\n');
