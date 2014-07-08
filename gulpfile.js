@@ -6,21 +6,6 @@ var path = require('path');
 var lr = require('tiny-lr');
 var fs = require('fs');
 
-//var browserify = require('gulp-browserify');
-//var bump = require('gulp-bump');
-//var clean = require('gulp-clean');
-//var concat = require('gulp-concat');
-//var debug = require('gulp-debug');
-//var gutil = require('gulp-util');
-//var insert = require('gulp-insert');
-//var less = require('gulp-less');
-//var minifyCSS = require('gulp-minify-css');
-//var ngHtml2Js = require('gulp-ng-html2js');
-//var ngMin = require('gulp-ngmin');
-//var size = require('gulp-size');
-////var traceur = require('gulp-traceur');
-//var uglify = require('gulp-uglify');
-
 var EXPRESS_PORT = 4000;
 var EXPRESS_ROOT = path.join(__dirname, './public');
 var LIVERELOAD_PORT = 35729;
@@ -28,8 +13,6 @@ var LIVERELOAD_PORT = 35729;
 console.log(EXPRESS_ROOT);
 
 function getFiles(dir) {
-//   var fullpath = path.join(__dirname, dir);
-//   console.log("getFiles() for: " + fullpath);
    var files = [];
    fs.readdirSync(dir)
       .filter(function (file) {
@@ -135,7 +118,7 @@ gulp.task('bump-patch', function(cb) {
 gulp.task('sub:build-templates', function() {
    console.log("partials: " + partials);
    gulp.src(partials)
-      .pipe($.ngHtml2Js({
+      .pipe($.ngHtml2js({
          moduleName: 'app.templates',
          prefix: './partials/',
          rename: function(url) { return url.replace('.tpl.html', '.html'); }
@@ -147,7 +130,7 @@ gulp.task('sub:build-templates', function() {
 });
 gulp.task('sub:build-templates-dev', function() {
    gulp.src(partials)
-      .pipe($.ngHtml2Js({
+      .pipe($.ngHtml2js({
          moduleName: 'app.templates',
          prefix: './partials/',
          rename: function(url) { return url.replace('.tpl.html', '.html'); }
@@ -215,12 +198,12 @@ gulp.task('sub:build-controllers', function() {
 });
 gulp.task('sub:build-services', function() {
    gulp.src(services)
-      .pipe(concat('_services.js'))
-      .pipe(insert.prepend('angular.module(\'app.services\', []);\r'))
-      .pipe(ngMin())
+      .pipe($.concat('_services.js'))
+      .pipe($.insert.prepend('angular.module(\'app.services\', []);\r'))
+      .pipe($.ngMin())
       .pipe(gulp.dest('./src/services'))
-      .on('error', gutil.log)
-      .pipe(size({title: '[build-services]'}));
+      .on('error', $.util.log)
+      .pipe($.size({title: '[build-services]'}));
 });
 gulp.task('sub:build-controllers-dev', function() {
    gulp.src(controllers)
@@ -237,11 +220,11 @@ gulp.task('sub:build-controllers-dev', function() {
 });
 gulp.task('sub:build-services-dev', function() {
    gulp.src(services)
-      .pipe(concat('_services.js'))
-      .pipe(insert.prepend('angular.module(\'app.services\', []);\r'))
+      .pipe($.concat('_services.js'))
+      .pipe($.insert.prepend('angular.module(\'app.services\', []);\r'))
       .pipe(gulp.dest('./src/services'))
-      .on('error', gutil.log)
-      .pipe(size({title: '[build-services-dev]'}));
+      .on('error', $.util.log)
+      .pipe($.size({title: '[build-services-dev]'}));
 });
 
 
@@ -250,26 +233,26 @@ gulp.task('sub:build-services-dev', function() {
  ********************************/
 gulp.task('sub:browserify', ['sub:publish', 'sub:build-templates', 'sub:build-controllers', 'sub:build-services'], function() {
    gulp.src('./src/app.js')
-      .pipe(browserify({
+      .pipe($.browserify({
          insertGlobals: true,
          debug: false
       }))
-      .pipe(uglify())
-      .pipe(concat('bundle.js'))
+      .pipe($.uglify())
+      .pipe($.concat('bundle.js'))
       .pipe(gulp.dest(EXPRESS_ROOT))
-      .on('error', gutil.log)
-      .pipe(size({title: '[browserify]'}));
+      .on('error', $.util.log)
+      .pipe($.size({title: '[browserify]'}));
 });
 gulp.task('sub:browserify-dev', ['sub:publish-dev', 'sub:build-templates-dev', 'sub:build-controllers-dev', 'sub:build-services-dev'], function() {
    gulp.src('./src/app.js')
-      .pipe(browserify({
+      .pipe($.browserify({
          insertGlobals: true,
          debug: true
       }))
-      .pipe(concat('bundle.js'))
+      .pipe($.concat('bundle.js'))
       .pipe(gulp.dest(EXPRESS_ROOT))
-      .on('error', gutil.log)
-      .pipe(size({title: '[browserify-dev]'}));
+      .on('error', $.util.log)
+      .pipe($.size({title: '[browserify-dev]'}));
 });
 
 
