@@ -29,7 +29,7 @@ app.get('/lib/*', function(req, res) {
    res.sendfile(path.join(__dirname, './public/', req.originalUrl));
 });
 app.get('/styles.css', function(req, res) {
-   res.sendfile(path.join(__dirname, './public/') + 'styles.css');
+   res.sendfile(path.join(__dirname, './public/') + 'site.css');
 });
 app.get('*', function(req, res) {
    res.render('index', { env: env });
