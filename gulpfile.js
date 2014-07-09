@@ -244,7 +244,6 @@ gulp.task('sub:publish', function() {
       .pipe(gulp.dest(EXPRESS_ROOT));
 });
 gulp.task('sub:publish-dev', function() {
-   console.log('bowerComponents: ' + bowerComponents);
    gulp.src(bowerComponents)
       .pipe(gulp.dest(path.join(EXPRESS_ROOT, 'lib')));
    gulp.src([path.join(__dirname, './src/styles/site.css'), path.join(__dirname, './src/index.jade')])

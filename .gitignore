@@ -21,5 +21,3 @@ public
 src/controllers/_controllers.js
 src/services/_services.js
 src/partials/_templates.js
-
-src/styles/*.css

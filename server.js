@@ -28,9 +28,6 @@ app.get('/partials/:partialPath', function(req, res) {
 app.get('/lib/*', function(req, res) {
    res.sendfile(path.join(__dirname, './public/', req.originalUrl));
 });
-app.get('/styles.css', function(req, res) {
-   res.sendfile(path.join(__dirname, './public/') + 'site.css');
-});
 app.get('*', function(req, res) {
    res.render('index', { env: env });
 });
