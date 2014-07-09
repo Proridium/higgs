@@ -32,26 +32,26 @@ if ( !String.prototype.contains ) {
 }
 
 var bowerComponents = [
-   './bower_components/angular/angular.js',
-   './bower_components/angular/angular.js.map',
-   './bower_components/angular-animate/angular-animate.js',
-   './bower_components/angular-animate/angular-animate.js.map',
-   './bower_components/angular-bootstrap/ui-bootstrap.js',
-   './bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-   './bower_components/angular-ui-router/release/angular-ui-router.js',
-   './bower_components/angular-strap/dist/angular-strap.tpl.js',
-   './bower_components/angular-strap/dist/modules/navbar.js'
+   path.join(__dirname, './bower_components/angular/angular.js'),
+   path.join(__dirname, './bower_components/angular/angular.js.map'),
+   path.join(__dirname, './bower_components/angular-animate/angular-animate.js'),
+   path.join(__dirname, './bower_components/angular-animate/angular-animate.js.map'),
+   path.join(__dirname, './bower_components/angular-bootstrap/ui-bootstrap.js'),
+   path.join(__dirname, './bower_components/angular-bootstrap/ui-bootstrap-tpls.js'),
+   path.join(__dirname, './bower_components/angular-ui-router/release/angular-ui-router.js'),
+   path.join(__dirname, './bower_components/angular-strap/dist/angular-strap.tpl.js'),
+   path.join(__dirname, './bower_components/angular-strap/dist/modules/navbar.js')
 ];
 var bowerComponentsMin = [
-   './bower_components/angular/angular.min.js',
-   './bower_components/angular/angular.min.js.map',
-   './bower_components/angular-animate/angular-animate.min.js',
-   './bower_components/angular-animate/angular-animate.min.js.map',
-   './bower_components/angular-bootstrap/ui-bootstrap.min.js',
-   './bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-   './bower_components/angular-ui-router/release/angular-ui-router.min.js',
-   './bower_components/angular-strap/dist/angular-strap.tpl.min.js',
-   './bower_components/angular-strap/dist/modules/navbar.min.js'
+   path.join(__dirname, './bower_components/angular/angular.min.js'),
+   path.join(__dirname, './bower_components/angular/angular.min.js.map'),
+   path.join(__dirname, './bower_components/angular-animate/angular-animate.min.js'),
+   path.join(__dirname, './bower_components/angular-animate/angular-animate.min.js.map'),
+   path.join(__dirname, './bower_components/angular-bootstrap/ui-bootstrap.min.js'),
+   path.join(__dirname, './bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'),
+   path.join(__dirname, './bower_components/angular-ui-router/release/angular-ui-router.min.js'),
+   path.join(__dirname, './bower_components/angular-strap/dist/angular-strap.tpl.min.js'),
+   path.join(__dirname, './bower_components/angular-strap/dist/modules/navbar.min.js')
 ];
 var controllers = getFiles('./src/controllers');
 var services = getFiles('./src/services');
@@ -152,7 +152,6 @@ gulp.task('sub:clean', function(cb) {
       }
 
       if (filesToDelete.length > 0) {
-         console.log('filesToDelete: ' + filesToDelete);
          gulp.src(filesToDelete, {read: false}).pipe($.clean({ force: true }));
       }
    } else {
@@ -245,6 +244,7 @@ gulp.task('sub:publish', function() {
       .pipe(gulp.dest(EXPRESS_ROOT));
 });
 gulp.task('sub:publish-dev', function() {
+   console.log('bowerComponents: ' + bowerComponents);
    gulp.src(bowerComponents)
       .pipe(gulp.dest(path.join(EXPRESS_ROOT, 'lib')));
    gulp.src([path.join(__dirname, './src/styles/site.css'), path.join(__dirname, './src/index.jade')])
