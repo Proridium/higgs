@@ -64,10 +64,17 @@ var green = $.util.colors.green;
 gulp.task('default', function() {
    gulp.start('build-dev');
 });
-gulp.task('build', function () {
-   gulp.start('sub:browserify');
+gulp.task('build', function (callback) {
+   console.log('Building production site...');
+   runSequence(
+      'sub:clean',
+      ['sub:build-templates', 'sub:build-controllers', 'sub:build-services'],
+      'sub:publish',
+      'sub:browserify',
+      callback);
 });
 gulp.task('build-dev', function(callback) {
+   console.log('Building development site...');
    runSequence(
       'sub:clean',
       ['sub:build-templates-dev', 'sub:build-controllers-dev', 'sub:build-services-dev'],
@@ -123,10 +130,10 @@ gulp.task('bump-patch', function(cb) {
  ********************************/
 gulp.task('sub:clean', function(cb) {
    if (fs.existsSync(EXPRESS_ROOT)) {
-      var filesToDelete = getFiles(EXPRESS_ROOT);
-      var libFolder = path.join(EXPRESS_ROOT + 'lib');
+      var filesToDelete = getFiles('public');
+      var libFolder = path.join(__dirname, '/public/lib');
       if (fs.existsSync(libFolder)) {
-         filesToDelete = filesToDelete.concat(getFiles(libFolder));
+         filesToDelete = filesToDelete.concat(getFiles('public/lib'));
       } else {
          fs.mkdir(libFolder);
       }
@@ -145,6 +152,7 @@ gulp.task('sub:clean', function(cb) {
       }
 
       if (filesToDelete.length > 0) {
+         console.log('filesToDelete: ' + filesToDelete);
          gulp.src(filesToDelete, {read: false}).pipe($.clean({ force: true }));
       }
    } else {
@@ -229,7 +237,7 @@ gulp.task('sub:build-services-dev', function() {
 gulp.task('sub:publish', function() {
 //   console.log('Publishing: ' + bowerComponents);
    gulp.src(bowerComponentsMin)
-      .pipe(gulp.dest(EXPRESS_ROOT + '/lib'));
+      .pipe(gulp.dest(path.join(EXPRESS_ROOT + 'lib')));
    gulp.src('./src/styles/site.css')
       .pipe($.minifyCSS())
       .pipe(gulp.dest(EXPRESS_ROOT));
@@ -238,8 +246,8 @@ gulp.task('sub:publish', function() {
 });
 gulp.task('sub:publish-dev', function() {
    gulp.src(bowerComponents)
-      .pipe(gulp.dest(EXPRESS_ROOT + '/lib'));
-   gulp.src(['./src/styles/site.css', './src/index.jade'])
+      .pipe(gulp.dest(path.join(EXPRESS_ROOT, 'lib')));
+   gulp.src([path.join(__dirname, './src/styles/site.css'), path.join(__dirname, './src/index.jade')])
       .pipe(gulp.dest(EXPRESS_ROOT));
 });
 gulp.task('sub:publish-express', function() {

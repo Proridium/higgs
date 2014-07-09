@@ -16,10 +16,10 @@ var staticPath = path.join(__dirname, '/public');
 app.set('views', path.join(__dirname, '/src'));
 app.set('view engine', 'jade');
 app.use(express.static(staticPath));
-app.use('/lib', express.static(path.join(__dirname, '/public/lib')));
-//   app.use('/js', express.static(path.join(__dirname, 'public/js')));
-//   app.use('/players', express.static(path.join(__dirname, 'public/players')));
-//   app.use('/images', express.static(path.join(__dirname, 'public/images')));
+//app.use('/lib', express.static(path.join(__dirname, '/public/lib')));
+//app.use('/js', express.static(path.join(__dirname, 'public/js')));
+//app.use('/players', express.static(path.join(__dirname, 'public/players')));
+//app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 /** Routes */
 app.get('/partials/:partialPath', function(req, res) {
