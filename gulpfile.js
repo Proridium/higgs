@@ -5,6 +5,7 @@ var $ = require('gulp-load-plugins')();
 var path = require('path');
 var lr = require('tiny-lr');
 var fs = require('fs');
+var runSequence = require('run-sequence');
 
 var EXPRESS_PORT = 4000;
 var EXPRESS_ROOT = path.join(__dirname, './public');
@@ -18,7 +19,7 @@ function getFiles(dir) {
       .filter(function (file) {
          if (!fs.statSync(path.join(dir, file)).isDirectory()
             && file.substring(0,1) !== '_' && file.substring(0,1) !== '.') {
-            files.push(path.join(dir,file));
+            files.push(path.join(__dirname, dir, file));
          }
       });
    return files;
@@ -60,14 +61,19 @@ var green = $.util.colors.green;
 /********************************
  * Tasks                        *
  ********************************/
-gulp.task('default', ['sub:clean-public'], function() {
+gulp.task('default', function() {
    gulp.start('build-dev');
 });
 gulp.task('build', function () {
    gulp.start('sub:browserify');
 });
-gulp.task('build-dev', function() {
-   gulp.start('sub:browserify-dev');
+gulp.task('build-dev', function(callback) {
+   runSequence(
+      'sub:clean',
+      ['sub:build-templates-dev', 'sub:build-controllers-dev', 'sub:build-services-dev'],
+      'sub:publish-dev',
+      'sub:browserify-dev',
+      callback);
 });
 gulp.task('debug', [], function() {
    startExpress();
@@ -115,39 +121,29 @@ gulp.task('bump-patch', function(cb) {
 /********************************
  * Subtasks                     *
  ********************************/
-gulp.task('sub:build-templates', function() {
-   console.log("partials: " + partials);
-   gulp.src(partials)
-      .pipe($.ngHtml2js({
-         moduleName: 'app.templates',
-         prefix: './partials/',
-         rename: function(url) { return url.replace('.tpl.html', '.html'); }
-      }))
-      .pipe($.concat('_templates.js'))
-      .pipe($.uglify())
-      .pipe(gulp.dest('./src/partials'))
-      .pipe($.size({title: '[build-templates]'}));
-});
-gulp.task('sub:build-templates-dev', function() {
-   gulp.src(partials)
-      .pipe($.ngHtml2js({
-         moduleName: 'app.templates',
-         prefix: './partials/',
-         rename: function(url) { return url.replace('.tpl.html', '.html'); }
-      }))
-      .pipe($.concat('_templates.js'))
-      .pipe(gulp.dest(__dirname + '/src/partials'))
-      .pipe($.size({title: '[build-templates-dev]'}));
-});
-
-gulp.task('sub:clean-public', function(cb) {
+gulp.task('sub:clean', function(cb) {
    if (fs.existsSync(EXPRESS_ROOT)) {
       var filesToDelete = getFiles(EXPRESS_ROOT);
-      if (fs.existsSync(EXPRESS_ROOT + '/lib')) {
-         filesToDelete = filesToDelete.concat(getFiles(EXPRESS_ROOT + '/lib'));
+      var libFolder = path.join(EXPRESS_ROOT + 'lib');
+      if (fs.existsSync(libFolder)) {
+         filesToDelete = filesToDelete.concat(getFiles(libFolder));
       } else {
-         fs.mkdir(EXPRESS_ROOT + '/lib');
+         fs.mkdir(libFolder);
       }
+
+      var _controllers = path.join(__dirname + '/src/controllers/_controllers.js');
+      if (fs.existsSync(_controllers)) {
+         filesToDelete = filesToDelete.concat(_controllers);
+      }
+      var _templates = path.join(__dirname + '/src/partials/_templates.js');
+      if (fs.existsSync(_templates)) {
+         filesToDelete = filesToDelete.concat(_templates);
+      }
+      var _services = path.join(__dirname + '/src/services/_services.js');
+      if (fs.existsSync(_services)) {
+         filesToDelete = filesToDelete.concat(_services);
+      }
+
       if (filesToDelete.length > 0) {
          gulp.src(filesToDelete, {read: false}).pipe($.clean({ force: true }));
       }
@@ -168,6 +164,68 @@ gulp.task('sub:clean-public', function(cb) {
 ////      gutil.log('site.css exists. :)');
 //   }
 //});
+gulp.task('sub:build-templates', function() {
+   return gulp.src(partials)
+      .pipe($.ngHtml2js({
+         moduleName: 'app.templates',
+         prefix: './partials/',
+         rename: function(url) { return url.replace('.tpl.html', '.html'); }
+      }))
+      .pipe($.concat('_templates.js'))
+      .pipe($.uglify())
+      .pipe(gulp.dest(path.join(__dirname, './src/partials')))
+      .pipe($.size({title: '[build-templates]'}));
+});
+gulp.task('sub:build-templates-dev', function() {
+   return gulp.src(partials)
+      .pipe($.ngHtml2js({
+         moduleName: 'app.templates',
+         prefix: './partials/',
+         rename: function(url) { return url.replace('.tpl.html', '.html'); }
+      }))
+      .pipe($.concat('_templates.js'))
+      .pipe(gulp.dest(path.join(__dirname, '/src/partials')))
+      .pipe($.size({title: '[build-templates-dev]'}));
+});
+gulp.task('sub:build-controllers', function() {
+   return gulp.src(controllers)
+      .pipe($.concat('_controllers.js'))
+      .pipe($.insert.prepend('angular.module(\'app.controllers\', []);\r'))
+      .pipe($.ngMin())
+      .pipe(gulp.dest('./src/controllers'))
+      .on('error', $.util.log)
+      .pipe($.size({title: '[build-controllers]'}));
+});
+gulp.task('sub:build-services', function() {
+   return gulp.src(services)
+      .pipe($.concat('_services.js'))
+      .pipe($.insert.prepend('angular.module(\'app.services\', []);\r'))
+      .pipe($.ngMin())
+      .pipe(gulp.dest(path.join(__dirname, '/src/services')))
+      .on('error', $.util.log)
+      .pipe($.size({title: '[build-services]'}));
+});
+gulp.task('sub:build-controllers-dev', function() {
+   return gulp.src(controllers)
+      .on('error', $.util.log)
+      .pipe($.concat('_controllers.js'))
+      .pipe($.insert.prepend('angular.module(\'app.controllers\', []);\r'))
+//      .pipe($.traceur({
+//         experimental: true,
+//         // sourceMap: true,
+//         modules: 'register'
+//      }))
+      .pipe(gulp.dest(path.join(__dirname + '/src/controllers')))
+      .pipe($.size({title: '[build-controllers-dev]'}));
+});
+gulp.task('sub:build-services-dev', function() {
+   return gulp.src(services)
+      .pipe($.concat('_services.js'))
+      .pipe($.insert.prepend('angular.module(\'app.services\', []);\r'))
+      .pipe(gulp.dest(path.join(__dirname + '/src/services')))
+      .on('error', $.util.log)
+      .pipe($.size({title: '[build-services-dev]'}));
+});
 gulp.task('sub:publish', function() {
 //   console.log('Publishing: ' + bowerComponents);
    gulp.src(bowerComponentsMin)
@@ -187,45 +245,6 @@ gulp.task('sub:publish-dev', function() {
 gulp.task('sub:publish-express', function() {
    gulp.src('./src/server.js').pipe(gulp.dest(EXPRESS_ROOT));
 });
-gulp.task('sub:build-controllers', function() {
-   gulp.src(controllers)
-      .pipe($.concat('_controllers.js'))
-      .pipe($.insert.prepend('angular.module(\'app.controllers\', []);\r'))
-      .pipe($.ngMin())
-      .pipe(gulp.dest('./src/controllers'))
-      .on('error', $.util.log)
-      .pipe($.size({title: '[build-controllers]'}));
-});
-gulp.task('sub:build-services', function() {
-   gulp.src(services)
-      .pipe($.concat('_services.js'))
-      .pipe($.insert.prepend('angular.module(\'app.services\', []);\r'))
-      .pipe($.ngMin())
-      .pipe(gulp.dest('./src/services'))
-      .on('error', $.util.log)
-      .pipe($.size({title: '[build-services]'}));
-});
-gulp.task('sub:build-controllers-dev', function() {
-   gulp.src(controllers)
-      .pipe($.concat('_controllers.js'))
-      .pipe($.insert.prepend('angular.module(\'app.controllers\', []);\r'))
-//      .pipe($.traceur({
-//         experimental: true,
-//         // sourceMap: true,
-//         modules: 'register'
-//      }))
-      .pipe(gulp.dest('./src/controllers'))
-      .on('error', $.util.log)
-      .pipe($.size({title: '[build-controllers-dev]'}));
-});
-gulp.task('sub:build-services-dev', function() {
-   gulp.src(services)
-      .pipe($.concat('_services.js'))
-      .pipe($.insert.prepend('angular.module(\'app.services\', []);\r'))
-      .pipe(gulp.dest('./src/services'))
-      .on('error', $.util.log)
-      .pipe($.size({title: '[build-services-dev]'}));
-});
 
 
 /********************************
@@ -243,7 +262,7 @@ gulp.task('sub:browserify', ['sub:publish', 'sub:build-templates', 'sub:build-co
       .on('error', $.util.log)
       .pipe($.size({title: '[browserify]'}));
 });
-gulp.task('sub:browserify-dev', ['sub:publish-dev', 'sub:build-templates-dev', 'sub:build-controllers-dev', 'sub:build-services-dev'], function() {
+gulp.task('sub:browserify-dev', function() {
    gulp.src('./src/app.js')
       .pipe($.browserify({
          insertGlobals: true,
