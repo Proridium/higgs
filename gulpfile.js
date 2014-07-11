@@ -3,13 +3,13 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var path = require('path');
-var lr = require('tiny-lr');
 var fs = require('fs');
 var runSequence = require('run-sequence');
+var browserSync = require('browser-sync');
+var reload = browserSync.reload;
 
-var EXPRESS_PORT = 4000;
 var EXPRESS_ROOT = path.join(__dirname, './public');
-var LIVERELOAD_PORT = 35729;
+var RELOAD_PORT = 3005;
 
 console.log(EXPRESS_ROOT);
 
@@ -55,7 +55,7 @@ var bowerComponentsMin = [
 ];
 var controllers = getFiles('./src/controllers');
 var services = getFiles('./src/services');
-var partials = getFiles('./src/partials');
+var templates = getFiles('./src/partials');
 var green = $.util.colors.green;
 
 /********************************
@@ -160,19 +160,8 @@ gulp.task('sub:clean', function(cb) {
    }
    cb();
 });
-//gulp.task('sub:ensureStyle', function () {
-//   var siteCss = __dirname + '/styles/site.css';
-//   if (!fs.existsSync(siteCss)) {
-////      gutil.log('site.css missing!');
-//      gulp.src(__dirname + '/styles/site.less')
-//         .pipe(less())
-//         .pipe(gulp.dest(__dirname + '/styles'));
-////   } else {
-////      gutil.log('site.css exists. :)');
-//   }
-//});
 gulp.task('sub:build-templates', function() {
-   return gulp.src(partials)
+   return gulp.src(templates)
       .pipe($.ngHtml2js({
          moduleName: 'app.templates',
          prefix: './partials/',
@@ -184,7 +173,7 @@ gulp.task('sub:build-templates', function() {
       .pipe($.size({title: '[build-templates]'}));
 });
 gulp.task('sub:build-templates-dev', function() {
-   return gulp.src(partials)
+   return gulp.src(templates)
       .pipe($.ngHtml2js({
          moduleName: 'app.templates',
          prefix: './partials/',
@@ -240,13 +229,25 @@ gulp.task('sub:publish', function() {
    gulp.src('./src/styles/site.css')
       .pipe($.minifyCSS())
       .pipe(gulp.dest(EXPRESS_ROOT));
-   gulp.src('./src/index.jade')
-      .pipe(gulp.dest(EXPRESS_ROOT));
+   gulp.src('src/*.jade')
+      .pipe($.jade({
+         locals: {
+            env: 'production'
+         }
+      }))
+      .pipe(gulp.dest('public/'));
 });
 gulp.task('sub:publish-dev', function() {
    gulp.src(bowerComponents)
       .pipe(gulp.dest(path.join(EXPRESS_ROOT, 'lib')));
-   gulp.src([path.join(__dirname, './src/styles/site.css'), path.join(__dirname, './src/index.jade')])
+   gulp.src('src/*.jade')
+      .pipe($.jade({
+         locals: {
+            env: 'development'
+         }
+      }))
+      .pipe(gulp.dest('public/'));
+   gulp.src(path.join(__dirname, './src/styles/site.css'))
       .pipe(gulp.dest(EXPRESS_ROOT));
 });
 gulp.task('sub:publish-express', function() {
@@ -281,35 +282,20 @@ gulp.task('sub:browserify-dev', function() {
       .pipe($.size({title: '[browserify-dev]'}));
 });
 
-
-/********************************
- * Livereload                   *
- ********************************/
-// Let's make things more readable by encapsulating each part's setup in its own method
-function startExpress() {
-   var express = require('express');
-   var app = express();
-   app.use(require('connect-livereload')());
-   app.use(express.static(EXPRESS_ROOT));
-   app.get('*', function(req, res) {
-      res.sendfile('index.html'); //, { env: env });
+/** web-starter-kit reload */
+// Watch Files For Changes & Reload
+gulp.task('serve', function () {
+   browserSync.init(null, {
+      server: {
+         baseDir: ['public'],
+         index: 'index.html'
+      },
+      online: false,
+      port: RELOAD_PORT,
+      notify: false
    });
-   app.listen(EXPRESS_PORT);
-}
 
-function startLivereload() {
-   lr = require('tiny-lr')();
-   lr.listen(LIVERELOAD_PORT);
-}
-
-// Notifies livereload of changes detected by `gulp.watch()`
-function notifyLivereload(event) {
-   // `gulp.watch()` events provide an absolute path
-   // so we need to make it relative to the server root
-   var fileName = require('path').relative(EXPRESS_ROOT, event.path);
-   lr.changed({
-      body: {
-         files: [fileName]
-      }
-   });
-}
+   gulp.watch(['src/styles/*.css', 'src/**/*.jade', 'src/**/*.html'], ['sub:publish-dev']);
+   gulp.watch([].concat(controllers, services, templates, 'src/app.js'), ['sub:browserify-dev']);
+   gulp.watch(['public/**/*'], reload);
+});
