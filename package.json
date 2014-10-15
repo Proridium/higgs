@@ -5,7 +5,7 @@
     "predeploy": "gulp",
     "start": "node server.js"
   },
-  "version": "0.2.20-2",
+  "version": "0.2.21",
   "description": "web",
   "main": "./config.js",
   "repository": {
