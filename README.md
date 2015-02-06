@@ -1,7 +1,5 @@
-Paradigm: Core
+Higgs
 ==============
-
-[ ![Codeship Status for Proridium/web](https://www.codeship.io/projects/45f97ca0-e487-0131-f05a-5211e4dcf742/status)](https://www.codeship.io/projects/25616)
 
 ##Setup for Brand NEW Machines
 1. <b>Shared Workspace</b> (& Notifications):
