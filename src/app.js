@@ -1,17 +1,14 @@
-'use strict';
-require('./controllers/_controllers');
-require('./services/_services');
-require('./partials/_templates');
+//import { Users } from './view-models/users';
 
-module.exports = angular.module('app', ['ngAnimate', 'app.controllers', 'app.services', 'app.templates', 'ui.bootstrap', 'ui.router', 'mgcrea.ngStrap.navbar'])
-   .config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
-      $locationProvider.html5Mode(true);
-      $stateProvider
-         .state('main', {url: '/main', templateUrl: './partials/main.html', controller: 'MainCtrl' })
-         .state('products', {url: '/products', templateUrl: './partials/products.html', controller: 'ProductsCtrl' })
-         .state('services', {url: '/services', templateUrl: './partials/services.html', controller: 'ServicesCtrl' })
-         .state('partners', {url: '/partners', templateUrl: './partials/partners.html', controller: 'PartnersCtrl' })
-         .state('about', {url: '/about', templateUrl: './partials/about.html', controller: 'AboutCtrl' });
-      $urlRouterProvider
-         .otherwise('/main');
-   });
+export class App {
+  configureRouter(config, router) {
+    config.title = "Higgs";
+    config.map([
+      { route: ['', 'home'], name: 'home',  moduleId: './pages/home/index',  nav: true, title:'Home' },
+      { route: 'users',      name: 'users', moduleId: './pages/users/index', nav: true, title:'Users' },
+      { route: 'about',      name: 'about', moduleId: './pages/about/index', nav: true, title:'About' }
+    ]);
+
+    this.router = router;
+  }
+}

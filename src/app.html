@@ -1,0 +1,11 @@
+<template>
+  <require from="./templates/layout/nav-bar.html"></require>
+  <require from="bootstrap/css/bootstrap.css"></require>
+  <!--<require from="font-awesome/css/font-awesome.css"></require>-->
+
+  <nav-bar router.bind="router" style="display:block;height:50px;"></nav-bar>
+
+  <div class="page-host">
+    <router-view></router-view>
+  </div>
+</template>

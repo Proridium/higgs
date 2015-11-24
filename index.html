@@ -1,10 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head lang="en">
-   <meta charset="UTF-8">
-   <title></title>
+<head>
+  <title>Higgs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--<link rel="stylesheet" type="text/css" href="jspm_packages/npm/todomvc-common@1.0.2/base.css">-->
+  <!--<link rel="stylesheet" type="text/css" href="jspm_packages/npm/todomvc-app-css@2.0.3/index.css">-->
+  <!--<script src="jspm_packages/npm/todomvc-common@1.0.2/base.js"></script>-->
 </head>
-<body>
-This is the wrong index file.
+<body aurelia-app="main">
+  <div class="splash">
+    <div class="message">Higgs loading...</div>
+    <i class="fa fa-spinner fa-spin"></i>
+  </div>
+
+  <script src="jspm_packages/system.js"></script>
+  <script src="config.js"></script>
+  <script>
+    System.import('aurelia-bootstrapper');
+  </script>
 </body>
 </html>
