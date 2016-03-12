@@ -1,75 +1,98 @@
 Higgs
 ==============
+# Table of Contents
+1. [Setup for Brand NEW Machines](#Setup-for-Brand-NEW-Machines)
+2. [Editor Setup](#Editor-Setup)
+  - [Visual Studio Code](##Visual-Studio-Code)
+  - [WebStorm](##WebStorm)
+3. [Start the Site](#Start-the-Site)
+4. [Miscellany](#Miscellany)
 
-##Setup for Brand NEW Machines
-1. <b>Shared Workspace</b> (& Notifications):
-	- Create a <a href='https://slack.com/'>Slack</a> account
-	- Slack Workspace: <https://proridium.slack.com/>
-	- Install the appropriate client for build notifications (Mac [<a href='https://itunes.apple.com/us/app/slack/id803453959?mt=12'>iTunes</a> or <a href='http://slack.com/ssb/download-osx'>Direct</a>], <a href='https://chrome.google.com/webstore/detail/slack/jeogkiiogjbmhklcnbgkdcjoioegiknm?hl=en-US'>Chrome</a>, <a href='https://play.google.com/store/apps/details?id=com.Slack&hl=en'>Android</a> & <a href='https://itunes.apple.com/us/app/slack-team-communication/id618783545?mt=8'>iOS</a>)
-2. <b>Server</b>: We use <a href='http://nodejs.org/'>NodeJS</a>.
-	- <a href='http://nodejs.org/download/'>Download</a> and install it. Please make sure it is in the path.
-	- Confirm that it is installed property. 
-		<pre><code>node --version</code></pre>
+#Setup for Brand NEW Machines
+1. <b>Install NodeJS v5.8+</b> for your platform: 
+ - Windows and Mac: <a href='https://nodejs.org/en/download/stable/'>Download</a> and install it.
+ - Linux:
+    - <b>curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -</b>
+    - <b>sudo apt-get install -y nodejs</b>
+ - Confirm that it is installed property:  <b>node --version</b>
+    
+2. <b>Server</b>: We use <a href='https://github.com/indexzero/http-server'>http-server</a> to serve our static files, and gulp for building a distributable app.
+  - Install Gulp Globally
+    - <b>npm install -g gulp</b>
+  - Install http-server Globally from a terminal / command line
+    - <b>npm install -g http-server</b>
 
-3. <b>Local Source Control</b>: We use a  <a href='http://git-scm.com/'>git</a>
-	- Download <a href='http://git-scm.com/downloads'>Git</a> and install it.
+3. <b>Source Control</b>: We use a  <a href='http://git-scm.com/'>git</a>
+	- Download <a href='https://git-scm.com/downloads'>Git</a> and install it.
 	- Confirm that it is installed property. 
 		<pre><code>git --version</code></pre>
-	- Follow the <a href='https://help.github.com/articles/set-up-git/'>setup</a> instructions.
+  - Optional: Install a Git Client on your desktop
+		- GitHub for <a href='https://windows.github.com/'>Windows</a> or <a href='https://mac.github.com/'>Mac</a>
+		- Git <a href='http://www.git-tower.com/'>Tower2 for Mac</a>
+		- <a href='http://www.sourcetreeapp.com/'>SourceTree</a> for Windows, Mac or Linux
+    - <a href='http://www.gitkraken.com/'>GitKraken</a> for Windows, Mac or Linux
+  
 4. <b>Source Control Host</b>: We use <a href='https://github.com/'>GitHub</a> to host our files in a private repository.
 	- Create a <a href='https://github.com/'>GitHub</a> account if you do not already have one.
-	- Use <a href='	- https://help.github.com/articles/about-two-factor-authentication/'>Two-Factor authentication</a>
-5. <b>Tying Local & Remote Source Control</b>:
-	- <a href='https://help.github.com/articles/set-up-git'>Setup your local git</a> installation for use with GitHub
-		- including <a href='https://help.github.com/articles/set-up-git#next-steps-authenticating-with-github-from-git'>authentication</a>
-	- Optional: Install a Git Client on your desktop
-		- <a href='https://mac.github.com/'>GitHub for Mac</a>
-		- <a href='https://windows.github.com/'>GitHub for Windows</a>
-		- <a href='http://www.git-tower.com/'>Tower2 for Mac</a> *I use this one.
-		- <a href='http://www.sourcetreeapp.com/'>SourceTree</a> for Windows or Mac
-6. <b>Get Permissions</b>:
-	- Send your GitHub & slack account login names to me: shartzog@gmail.com so I can add you to the team.
+	- Use <a href='https://help.github.com/articles/about-two-factor-authentication/'>Two-Factor authentication</a>
+
+5. <b>Team Chat</b>: We use <a href='https://slack.com/'>Slack</a> for team chat.
+- Create a <a href='https://slack.com/'>Slack</a> account
+ - Install <a href='https://slack.com/downloads'>Slack</a> for Windows, Mac, Linux, iOS, Android or Windows Phone.
+ 
+6. <b>Request Permissions</b>:
+	- Send your <b>GitHub</b> & <b>slack</b> account login names to me: shartzog@gmail.com so I can add you to the team.
+  
 7. <b>Prepare the Code for Dev</b>: Start with our default project template and add it to your github account.
 	- Wait for my email saying you have access to our source on GitHub
-	- Open the <a href='https://github.com/proridium/web'>template repo</a> on github
-	- <a href='https://help.github.com/articles/fork-a-repo/'>Fork</a> it
-8. <b>Dev Environment</b>: <a href='https://www.jetbrains.com/webstorm/download/'>Install</a> WebStorm
+	- Clone <a href='https://github.com/Proridium/higgs'>this repo</a> on github
+  - Run <b>npm install</b> on the repo to get all dependencies
 
-##Project Setup (Terminal):
-1. <b>npm init</b>: This will install all of the node package requirements, then install/download the client dependencies with bower.
-2. <b>npm start</b>: This should install: Express, Browserify, LiveReload, Gulp, Angular, AngularStrap, AngularUI Router, etc. This will then run the <b>gulp init</b> command for you.
-** <b>npm run bump</b>: This will bump the patch version up a number.
+8. <b>Shared Workspace</b> (& Notifications):
+	- Slack Workspace: <https://proridium.slack.com/>
+	- Install the appropriate client for build notifications (Mac [<a href='https://itunes.apple.com/us/app/slack/id803453959?mt=12'>iTunes</a> or <a href='http://slack.com/ssb/download-osx'>Direct</a>], <a href='https://chrome.google.com/webstore/detail/slack/jeogkiiogjbmhklcnbgkdcjoioegiknm?hl=en-US'>Chrome</a>, <a href='https://play.google.com/store/apps/details?id=com.Slack&hl=en'>Android</a> & <a href='https://itunes.apple.com/us/app/slack-team-communication/id618783545?mt=8'>iOS</a>)
 
-##WebStorm Setup:
-1. <b>Configure a Node.js App</b> (<a href='http://blog.jetbrains.com/webstorm/2014/05/guide-to-node-js-development-with-webstorm/'>Guide to Node.js Development with WebStorm</a>):
-	- <a href='https://www.jetbrains.com/webstorm/webhelp/running-and-debugging-node-js.html#Node.js_run'>Create a node Configuration</a>
-2. <b>Get the Code</b>: 
-	- <a href='https://www.jetbrains.com/webstorm/webhelp/using-github-integration.html'>Configure</a> WebStorm for use with GitHub.
-	- <a href='https://www.jetbrains.com/webstorm/webhelp/installing-updating-and-uninstalling-repository-plugins.html'>Enable the GitHub bundled plugin</a> to get access to GitHub integration.
-	- <a href='https://www.jetbrains.com/webstorm/webhelp/registering-github-account-in-webstorm.html'>Register your GitHub account</a> in WebStorm.
-	- <a href='https://www.jetbrains.com/webstorm/webhelp/cloning-a-repository-from-github.html'>Clone your GitHub forked repo</a> of the web repo.
+9. <b>Dev Environment</b>:
+  - <a href='http://code.visualstudio.com/download/'>Visual Studio Code</a> (free)
+  - <a href='https://www.sublimetext.com/3'>Sublime 3 beta</a> ($70)
+  - <a href='https://www.jetbrains.com/webstorm/download/'>WebStorm</a> ($129/yr)
+  
 
-##Build Commands (Terminal):
+#Editor Setup
+##Visual Studio Code:
+  - Install EditorConfig:
+    <pre><code>> ext install editorconfig</pre></code>
+
+##WebStorm:
+  - Enable EditorConfig: <pre><code>File|Preferences, Editor, Check Enable external editorconfig</code></pre>
+  - Enable tslint config
+  - <a href='https://www.jetbrains.com/webstorm/webhelp/using-github-integration.html'>Configure</a> WebStorm for use with GitHub.
+  - <a href='https://www.jetbrains.com/webstorm/webhelp/installing-updating-and-uninstalling-repository-plugins.html'>Enable the GitHub bundled plugin</a> to get access to GitHub integration.
+  - <a href='https://www.jetbrains.com/webstorm/webhelp/registering-github-account-in-webstorm.html'>Register your GitHub account</a> in WebStorm.
+
+<!-- #Build Commands (Terminal):
 
     gulp          // The default gulp command builds the dev files, then browserify's them into a single concatenated file.
     gulp build    // This will build the production files, then minimize, then browserify the files.
     gulp serve    // This will spin up the node instance with live-reloading of changes directly in the browser with watchers to rebuild files if anything changes.
+-->
 
-##Miscellany
-* <b>Styles</b>: We currently use LESS for our styles, and Bootstrap's LESS source for our boilerplate. The LESS files are in the src folder, and the outputed CSS is in the public folder. 
-	- Future possibility of SASS (with <a href='https://github.com/dlmanning/gulp-sass'>gulp-sass</a>)
+#Start the Site
+1. Change directory to the repo folder on your machine.
+2. Start the server: <b>http-server -o -c-1</b>
+
+#Miscellany
+* <b>Styles</b>: We will use Bootstrap's SASS source for our boilerplate, with SASS to be built out of our styles folder (with <a href='https://github.com/dlmanning/gulp-sass'>gulp-sass</a>)
 * <b>Folder Structure</b>:
-	- public: The build version of the site that is served to the browser.
-		- bundle.js: The browserify output bundle of all app code for the client (excluding 3rd party libraries)
+	- dist (future): The build version of the site that is served to the browser.
 	- src: The source version of the site where development is done.
-	- bower_components: Client dependency source folder.
-	- node_modules: Server dependency source folder.
-* <b>Agile Board</b>: We've tried a few, including <a href='https://www.jetbrains.com/youtrack/'>YouTrack</a> and <a href='https://trello.com/'>Trello</a>... but are currently using <a href='https://github.com/proridium/web/issues'>GitHub Issues</a> (which is just a simple list of features and bugs).
-* <b>Build</b>: We use gulp as our build system, and browserify to bundle our modules up for easy client consumption.
-* <b>Tests</b>: We will use <a href='http://www.seleniumhq.org/'>Selenium</a> for our testing.
-* <b>Hosting</b>: We use Nodejitsu: <http://proridium.nodejitsu.com/>
+	- node_modules, jspm_modules: 3rd party dependency folders.
+* <b>Agile Board</b>: <a href='https://github.com/proridium/higgs/issues'>GitHub Issues</a> (which is just a simple list of features and bugs).
+* <b>Build</b>: We will use gulp as our build system.
+* <b>Tests</b>: We will use mocha and chai for our unit tests.
+* <b>Hosting</b>: TBD
 * <b>Process to go to staging</b>:<br/>
 	1. <a href='https://codeship.io/projects/25616'>Codeship.io</a> continuously monitors our github repo.
 	2. If changes are detected, it runs our test suite (coming soon).
-	3. If all tests pass, it pushes changes to our Nodejitsu site (<http://proridium.nodejitsu.com/>).
+	3. If all tests pass, it pushes changes to our site (TBD <!-- <http://proridium.nodejitsu.com/> -->).
 	4. Once a build is completed by Codeship.io, slack will send you a notification.

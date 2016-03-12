@@ -1,53 +1,47 @@
 {
-  "name": "web",
-  "subdomain": "proridium",
-  "scripts": {
-    "predeploy": "gulp",
-    "start": "node server.js"
-  },
-  "version": "0.2.21",
-  "description": "web",
-  "main": "./config.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Proridium/web.git"
-  },
+  "name": "Higgs",
+  "version": "0.3.0",
+  "description": "",
+  "keywords": [
+    "higgs",
+    "permissions",
+    "directory"
+  ],
+  "homepage": "http://www.proridium.com",
+  "license": "CC-BY-NC-ND-4.0",
   "author": "Steve Hartzog <shartzog@gmail.com>",
-  "license": "CC-BY-NC-ND-3.0",
-  "bugs": {
-    "url": "https://github.com/Proridium/web/issues"
-  },
-  "homepage": "https://github.com/Proridium/web",
-  "dependencies": {
-    "express": "^4.4.5",
-    "jade": "^1.3.1"
-  },
-  "devDependencies": {
-    "browser-sync": "^1.2.1",
-    "browserify": "^3.38.0",
-    "connect-livereload": "^0.3.2",
-    "gulp": "^3.6.0",
-    "gulp-browserify": "^0.5.0",
-    "gulp-bump": "^0.1.7",
-    "gulp-clean": "^0.2.4",
-    "gulp-concat": "^2.2.0",
-    "gulp-debug": "^0.3.0",
-    "gulp-filter": "^0.5.0",
-    "gulp-insert": "^0.2.0",
-    "gulp-jade": "^0.6.1",
-    "gulp-less": "^1.2.3",
-    "gulp-livereload": "^1.2.0",
-    "gulp-load-plugins": "^0.5.3",
-    "gulp-minify-css": "^0.3.0",
-    "gulp-ng-html2js": "^0.1.6",
-    "gulp-ngmin": "^0.1.2",
-    "gulp-size": "^0.2.0",
-    "gulp-traceur": "^0.7.0",
-    "gulp-uglify": "^0.2.1",
-    "gulp-util": "^2.2.14",
-    "run-sequence": "^0.3.6"
-  },
-  "engines": {
-    "node": "0.10.26"
+  "main": "src/main.js",
+  "jspm": {
+    "dependencies": {
+      "aurelia-animator-css": "npm:aurelia-animator-css@^1.0.0-beta.1.1.0",
+      "aurelia-bootstrapper": "npm:aurelia-bootstrapper@^1.0.0-beta.1.1.1",
+      "aurelia-fetch-client": "npm:aurelia-fetch-client@^1.0.0-beta.1.1.0",
+      "aurelia-framework": "npm:aurelia-framework@^1.0.0-beta.1.1.0",
+      "aurelia-history-browser": "npm:aurelia-history-browser@^1.0.0-beta.1.1.1",
+      "aurelia-loader-default": "npm:aurelia-loader-default@^1.0.0-beta.1.1.1",
+      "aurelia-logging-console": "npm:aurelia-logging-console@^1.0.0-beta.1.1.3",
+      "aurelia-router": "npm:aurelia-router@^1.0.0-beta.1.1.0",
+      "aurelia-templating-binding": "npm:aurelia-templating-binding@^1.0.0-beta.1.1.0",
+      "aurelia-templating-resources": "npm:aurelia-templating-resources@^1.0.0-beta.1.1.0",
+      "aurelia-templating-router": "npm:aurelia-templating-router@^1.0.0-beta.1.1.0",
+      "bootstrap": "github:twbs/bootstrap@^3.3.5",
+      "core-js": "npm:core-js@^2.0.3",
+      "fetch": "github:github/fetch@^0.10.1",
+      "font-awesome": "npm:font-awesome@^4.4.0",
+      "text": "github:systemjs/plugin-text@^0.0.3",
+      "ts": "github:frankwallis/plugin-typescript@^2.5.6"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "traceur": "github:jmcriffey/bower-traceur@0.0.91",
+      "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.91",
+      "typescript": "npm:typescript@^1.6.2"
+    },
+    "overrides": {
+      "npm:core-js@2.0.3": {
+        "main": "client/shim.min"
+      }
+    }
   }
 }

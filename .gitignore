@@ -1,23 +1,6 @@
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-
-pids
-logs
-results
-
 npm-debug.log
 .idea
 
 node_modules
-bower_components
-public
-
-src/controllers/_controllers.js
-src/services/_services.js
-src/partials/_templates.js
+jspm_modules
+dist
