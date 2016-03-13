@@ -1,14 +1,14 @@
 Higgs
 ==============
 # Table of Contents
-1. [Setup for Brand NEW Machines](#Setup-for-Brand-NEW-Machines)
-2. [Editor Setup](#Editor-Setup)
+1. [Setup for Brand NEW Machines](#setup)
+2. [Editor Setup](#editor)
   - [Visual Studio Code](##Visual-Studio-Code)
   - [WebStorm](##WebStorm)
 3. [Start the Site](#Start-the-Site)
 4. [Miscellany](#Miscellany)
 
-#Setup for Brand NEW Machines
+# Setup for Brand NEW Machines<a name="setup></a>
 1. <b>Install NodeJS v5.8+</b> for your platform: 
  - Windows and Mac: <a href='https://nodejs.org/en/download/stable/'>Download</a> and install it.
  - Linux:
@@ -58,7 +58,7 @@ Higgs
   - <a href='https://www.jetbrains.com/webstorm/download/'>WebStorm</a> ($129/yr)
   
 
-#Editor Setup
+#Editor Setup<a name="editor"></a>
 ##Visual Studio Code:
   - Install EditorConfig:
     <pre><code>> ext install editorconfig</pre></code>

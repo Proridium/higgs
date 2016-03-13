@@ -1,6 +1,5 @@
 npm-debug.log
 .idea
-
 node_modules
-jspm_modules
+jspm_packages
 dist
