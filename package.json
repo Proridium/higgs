@@ -9,6 +9,10 @@
   ],
   "homepage": "http://www.proridium.com",
   "license": "CC-BY-NC-ND-4.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/proridium/higgs.git"
+  },
   "author": "Steve Hartzog <shartzog@gmail.com>",
   "main": "src/main.js",
   "jspm": {
@@ -43,5 +47,8 @@
         "main": "client/shim.min"
       }
     }
+  },
+  "dependencies": {
+    "jspm": "^0.16.31"
   }
 }

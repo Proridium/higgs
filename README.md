@@ -1,5 +1,8 @@
 Higgs
 ==============
+
+![Codeship Build Status](https://codeship.com/projects/45f97ca0-e487-0131-f05a-5211e4dcf742/status?branch=master)
+
 # Table of Contents
 1. [Setup for Brand NEW Machines](#setup)
 2. [Editor Setup](#editor)
@@ -12,15 +15,16 @@ Higgs
 1. <b>Install NodeJS v5.8+</b> for your platform: 
  - Windows and Mac: <a href='https://nodejs.org/en/download/stable/'>Download</a> and install it.
  - Linux:
-    - <b>curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -</b>
-    - <b>sudo apt-get install -y nodejs</b>
- - Confirm that it is installed property:  <b>node --version</b>
+    <pre><code>curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -</b>
+    sudo apt-get install -y nodejs</code></pre>
+ - Confirm that it is installed property:
+    <pre><code>node --version</code></pre>
     
 2. <b>Server</b>: We use <a href='https://github.com/indexzero/http-server'>http-server</a> to serve our static files, and gulp for building a distributable app.
   - Install Gulp Globally
-    - <b>npm install -g gulp</b>
+    <pre><code>npm install -g gulp</code></pre>
   - Install http-server Globally from a terminal / command line
-    - <b>npm install -g http-server</b>
+    <pre><code>npm install -g http-server</code></pre>
 
 3. <b>Source Control</b>: We use a  <a href='http://git-scm.com/'>git</a>
 	- Download <a href='https://git-scm.com/downloads'>Git</a> and install it.
@@ -37,9 +41,13 @@ Higgs
 	- Use <a href='https://help.github.com/articles/about-two-factor-authentication/'>Two-Factor authentication</a>
 
 5. <b>Team Chat</b>: We use <a href='https://slack.com/'>Slack</a> for team chat.
-- Create a <a href='https://slack.com/'>Slack</a> account
- - Install <a href='https://slack.com/downloads'>Slack</a> for Windows, Mac, Linux, iOS, Android or Windows Phone.
- 
+  - Create a <a href='https://slack.com/'>Slack</a> account
+  - Install <a href='https://slack.com/downloads'>Slack</a> for Windows, Mac, Linux, iOS, Android or Windows Phone.
+  <!-- 5. <b>Team Chat</b>: We use Github's<a href='https://gitter.im'>gitter</a> for team chat.
+    - Uses our github accounts, app is electron based just like slack.
+    - Install <a href='https://gitter.im/apps'>gitter</a> for Windows, Mac, Linux, iOS or Android.
+  -->
+
 6. <b>Request Permissions</b>:
 	- Send your <b>GitHub</b> & <b>slack</b> account login names to me: shartzog@gmail.com so I can add you to the team.
   
@@ -79,7 +87,8 @@ Higgs
 
 #Start the Site<a name="start"></a>
 1. Change directory to the repo folder on your machine.
-2. Start the server: <b>http-server -o -c-1</b>
+2. Start the server:
+    http-server -o -c-1</code></pre>
 
 #Miscellany<a name="misc"></a>
 * <b>Styles</b>: We will use Bootstrap's SASS source for our boilerplate, with SASS to be built out of our styles folder (with <a href='https://github.com/dlmanning/gulp-sass'>gulp-sass</a>)
