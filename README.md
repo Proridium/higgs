@@ -3,12 +3,12 @@ Higgs
 # Table of Contents
 1. [Setup for Brand NEW Machines](#setup)
 2. [Editor Setup](#editor)
-  - [Visual Studio Code](##Visual-Studio-Code)
-  - [WebStorm](##WebStorm)
-3. [Start the Site](#Start-the-Site)
-4. [Miscellany](#Miscellany)
+  - [Visual Studio Code](#editor-vscode)
+  - [WebStorm](#editor-webstorm)
+3. [Start the Site](#start)
+4. [Miscellany](#misc)
 
-# Setup for Brand NEW Machines<a name="setup></a>
+# Setup for Brand NEW Machines<a name="setup"></a>
 1. <b>Install NodeJS v5.8+</b> for your platform: 
  - Windows and Mac: <a href='https://nodejs.org/en/download/stable/'>Download</a> and install it.
  - Linux:
@@ -59,11 +59,11 @@ Higgs
   
 
 #Editor Setup<a name="editor"></a>
-##Visual Studio Code:
+##Visual Studio Code:<a name="editor-vscode"></a>
   - Install EditorConfig:
     <pre><code>> ext install editorconfig</pre></code>
 
-##WebStorm:
+##WebStorm:<a name="editor-webstorm"></a>
   - Enable EditorConfig: <pre><code>File|Preferences, Editor, Check Enable external editorconfig</code></pre>
   - Enable tslint config
   - <a href='https://www.jetbrains.com/webstorm/webhelp/using-github-integration.html'>Configure</a> WebStorm for use with GitHub.
@@ -77,11 +77,11 @@ Higgs
     gulp serve    // This will spin up the node instance with live-reloading of changes directly in the browser with watchers to rebuild files if anything changes.
 -->
 
-#Start the Site
+#Start the Site<a name="start"></a>
 1. Change directory to the repo folder on your machine.
 2. Start the server: <b>http-server -o -c-1</b>
 
-#Miscellany
+#Miscellany<a name="misc"></a>
 * <b>Styles</b>: We will use Bootstrap's SASS source for our boilerplate, with SASS to be built out of our styles folder (with <a href='https://github.com/dlmanning/gulp-sass'>gulp-sass</a>)
 * <b>Folder Structure</b>:
 	- dist (future): The build version of the site that is served to the browser.
