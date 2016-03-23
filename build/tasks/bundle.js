@@ -1,4 +1,4 @@
-var gulp = require('gulp');
+var gulp = require('gulp-help')(require('gulp'));
 var bundler = require('aurelia-bundler');
 var bundles = require('../bundles.js');
 
@@ -9,10 +9,10 @@ var config = {
   bundles: bundles.bundles
 };
 
-gulp.task('bundle', ['build'], function() {
+gulp.task('bundle', false, ['build'], function() {
   return bundler.bundle(config);
 });
 
-gulp.task('unbundle', function() {
+gulp.task('unbundle', false, function() {
   return bundler.unbundle(config);
 });

@@ -16,6 +16,12 @@
   "author": "Steve Hartzog <shartzog@gmail.com>",
   "engine": "node >= 5.8.0",
   "main": "dist/main.js",
+  "config": {
+    "paths": {
+      "styles": "./styles/**/*.scss",
+      "output": "./dist"
+    }
+  },
   "scripts": {
     "test": "gulp test"
   },
@@ -72,5 +78,10 @@
       "text": "github:systemjs/plugin-text@^0.0.3"
     },
     "devDependencies": {}
+  },
+  "dependencies": {
+    "gulp-concat": "^2.6.0",
+    "gulp-help": "^1.6.1",
+    "gulp-sass": "^2.2.0"
   }
 }

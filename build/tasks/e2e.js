@@ -1,4 +1,4 @@
-var gulp = require('gulp');
+var gulp = require('gulp-help')(require('gulp'));
 var paths = require('../paths');
 var plumber = require('gulp-plumber');
 var webdriverUpdate = require('gulp-protractor').webdriver_update;
@@ -10,10 +10,10 @@ var del = require('del');
 
 // for full documentation of gulp-protractor,
 // please check https://github.com/mllrsohn/gulp-protractor
-gulp.task('webdriver-update', webdriverUpdate);
-gulp.task('webdriver-standalone', ['webdriver-update'], webdriverStandalone);
+gulp.task('webdriver-update', false, webdriverUpdate);
+gulp.task('webdriver-standalone', false, ['webdriver-update'], webdriverStandalone);
 
-gulp.task('clean-e2e', function() {
+gulp.task('clean-e2e', false, function() {
   return del(paths.e2eSpecsDist + '*');
 });
 
@@ -21,7 +21,7 @@ gulp.task('clean-e2e', function() {
 // /test/e2e/src/ from es6 to es5
 // then copies them to test/e2e/dist/
 var typescriptCompiler = typescriptCompiler || null;
-gulp.task('build-e2e', ['clean-e2e'], function() {
+gulp.task('build-e2e', false, ['clean-e2e'], function() {
   if(!typescriptCompiler) {
     typescriptCompiler = typescript.create(assign(require('../../tsconfig.json').compilerOptions, {module: 'commonjs'}));
   }
@@ -33,7 +33,7 @@ gulp.task('build-e2e', ['clean-e2e'], function() {
 // runs build-e2e task
 // then runs end to end tasks
 // using Protractor: http://angular.github.io/protractor/
-gulp.task('e2e', ['build-e2e'], function(cb) {
+gulp.task('e2e', false, ['build-e2e'], function(cb) {
   return gulp.src(paths.e2eSpecsDist + '**/*.js')
     .pipe(protractor({
       configFile: 'protractor.conf.js',
