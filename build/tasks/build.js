@@ -1,4 +1,4 @@
-var gulp = require('gulp-help')(require('gulp'));
+var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var changed = require('gulp-changed');
 var plumber = require('gulp-plumber');
@@ -7,6 +7,9 @@ var paths = require('../paths');
 var assign = Object.assign || require('object.assign');
 var notify = require('gulp-notify');
 var typescript = require('gulp-tsb');
+var concat = require('gulp-concat');
+var config = require('../../package.json').config;
+var sass = require('gulp-sass');
 
 // transpiles changed es6 files to SystemJS format
 // the plumber() call prevents 'pipe breaking' caused
@@ -31,10 +34,13 @@ gulp.task('build-html', 'Copies changed html files to the output directory', fun
     .pipe(gulp.dest(paths.output));
 });
 
-gulp.task('build-css', 'Copies changed css files to the output directory', function() {
-  return gulp.src(paths.css)
-    .pipe(changed(paths.output, {extension: '.css'}))
-    .pipe(gulp.dest(paths.output));
+gulp.task('build-css', 'Transiles and bundles Sass', function() {
+  return gulp.src(config.paths.styles)
+    .pipe(sass({
+      includePaths: require('node-bourbon').includePaths
+    }).on('error', sass.logError))
+    .pipe(concat('site.css'))
+    .pipe(gulp.dest(config.paths.output));
 });
 
 gulp.task('build', 'Cleans, then runs build-system & build-html in parallel', function(callback) {

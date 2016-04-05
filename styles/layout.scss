@@ -1,0 +1,123 @@
+@import 'mediaQueries';
+@import 'bourbon';
+@import url(https://fonts.googleapis.com/css?family=Varela+Round);
+
+
+html, body {
+  height: 100%;
+  font-family: sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Varela Round', sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+body > header {
+  display: block;
+  height:44px;
+}
+
+.splash {
+  text-align: center;
+  margin: 10% 0 0 0;
+  box-sizing: border-box;
+  
+  .message {
+    font-size: 72px;
+    line-height: 72px;
+    text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
+    text-transform: uppercase;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .fa-spinner {
+    text-align: center;
+    display: inline-block;
+    font-size: 72px;
+    margin-top: 50px;
+  }
+}
+
+body {
+  width: 100%;
+  height:100%;
+  // padding-top:48px;
+  
+  @include display('flex');
+  
+  align-items: stretch;
+  justify-content: space-between;
+  
+  flex-flow: column wrap;
+}
+
+article {
+  height: calc(100vh - 44px);
+  overflow-y: scroll;
+
+  flex-grow: 1;
+}
+
+.content {
+  padding: 0 20px;
+  
+  @include display('flex');
+  
+  flex-flow: row-reverse nowrap;
+
+  section.content-well {
+    width: calc(100% - 280px);
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 0;
+  }
+}
+.leader {
+  float: left;
+}
+
+.footer {
+  height: 50px;
+  padding-left: 1%;
+  @include background(linear-gradient(top, whitesmoke 0%, lighten(maroon, 80%) 100%));
+  /* W3C */
+  color: white;
+  text-shadow: 1px 1px 0 #f5f5f5;
+  
+  div {
+    font-size: .7em;
+    display: inline-block;
+    width: 30%;
+    vertical-align: middle;
+  }
+  div:nth-child(2) {
+    font-size: 1.2em;
+    text-align: center;
+    font-style: italic;
+    width: 38%;
+  }
+  div:nth-last-of-type(1) {
+    text-align: right;
+    width: 30%;
+  }
+  .footerTable {
+    padding: 0px 15px;
+    width: 100%;
+  }
+}
+
+@media print {
+  .page-host {
+    position: absolute;
+    left: 10px;
+    right: 0;
+    top: 50px;
+    bottom: 0;
+    overflow-y: inherit;
+    overflow-x: inherit;
+  }
+}

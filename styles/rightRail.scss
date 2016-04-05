@@ -1,0 +1,40 @@
+@import 'mediaQueries';
+@import 'bourbon';
+@import 'variables';
+
+article > .content > .right-rail {
+  margin: 15px 0 15px 15px;
+  margin-top: 58px;
+  width:250px;
+
+  .rr-box {
+    display:block;
+    background: whitesmoke;
+    border: 1px solid #91B3F8;
+    border-radius: 10px;
+    header {
+      @include border-top-radius(9px);
+      font-weight: bold;
+      font-family: 'Varela Round', sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 0 #000000;
+      color: #fff;
+      text-align: center;
+      width: 100%;
+      
+      @include background(linear-gradient(to bottom, $gradient1 4px, $gradient2 12px, $gradient3 12px, $gradient4 24px));
+    }
+    ul.naics {
+      margin-top:10px;
+      list-style-type: none;
+      padding:0 5px 15px 15px;
+
+    }
+  }
+  
+  @include media("<=tablet") {
+    display: none;
+  }
+}

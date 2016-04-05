@@ -1,4 +1,4 @@
-var gulp = require('gulp-help')(require('gulp'));
+var gulp = require('gulp');
 var paths = require('../paths');
 var browserSync = require('browser-sync');
 
@@ -15,5 +15,4 @@ gulp.task('watch', 'Watches for Changes to TS, html & CSS, then uses browserSync
   gulp.watch(paths.source, ['build-system', browserSync.reload]).on('change', reportChange);
   gulp.watch(paths.html, ['build-html', browserSync.reload]).on('change', reportChange);
   gulp.watch(paths.css, ['build-css', browserSync.reload]).on('change', reportChange);
-  gulp.watch(paths.style, browserSync.reload).on('change', reportChange);
 });
